@@ -1,8 +1,7 @@
-"use client";  // ✅ Ensures this runs only on the client
+"use client";  // Ensure this runs only on the client
 
 import React from "react";
-import { motion } from "framer-motion";  // ✅ Ensure motion is imported
-import Image from "next/image";  // ✅ Next.js optimized image handling
+import Image from "next/image";  // Next.js optimized image handling
 
 const teamMembers = [
   {
@@ -34,12 +33,9 @@ const Members = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center place-items-center">
         {teamMembers.map((member, index) => (
-          <motion.div
+          <div
             key={index}
             className="group bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center transition-all duration-300 transform hover:scale-105 hover:bg-[#8f1b1b] hover:text-white w-80"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.15 }}
           >
             <Image
               src={member.img}
@@ -57,7 +53,7 @@ const Members = () => {
             <span className="text-gray-700 group-hover:text-gray-300 text-sm">
               📞 {member.contact}
             </span>
-          </motion.div>
+          </div>
         ))}
       </div>
     </div>

@@ -1,87 +1,86 @@
-import React from 'react'
-import MapTooltip from './MapTooltip'
-import Navbar from '../components/Navbar/Navbar'
-import Footer from '../components/Navbar/Footer'
-import Members from './Members'
+import React from "react";
+import MapTooltip from "./MapTooltip";
+import Navbar from "../components/Navbar/Navbar";
+import aboutBg from "../../public/assets/aboutbg.jpg"
+import Footer from "../components/Navbar/Footer";
 
-const page = () => {
+import LeftImgAbout from "./LeftImgAbout";
+import RightImgAbout from "./‎RightImgAbout";
+
+const Page = () => {
   return (
+    <>
+    <Navbar/>
     <div className="w-full">
-    {/* 1. Background Image Section */}
-    <motion.div
-      className="flex flex-col justify-center items-center h-[70vh] bg-cover bg-center text-white text-center"
-      style={{ backgroundImage: `url(${aboutBg})` }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-    >
-      <motion.h1 
-        className="font-bold text-5xl md:text-6xl mb-4 drop-shadow-lg"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, delay: 0.3 }}
+      {/* 1. Background Image Section */}
+      <div
+        className="flex flex-col justify-center items-center h-[70vh] bg-cover bg-center text-white text-center"
+        style={{ backgroundImage: `url(${aboutBg})` }}
       >
-        Dklean Healthcare
-      </motion.h1>
-      
-      <motion.h2
-        className="font-semibold text-3xl md:text-4xl drop-shadow-lg"
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-      >
-        About Dklean
-      </motion.h2>
-    </motion.div>
-    {/* Background Image Section ends */}
+        <h1 className="font-bold text-5xl md:text-6xl mb-4 drop-shadow-lg">
+          Dklean Healthcare
+        </h1>
+        <h2 className="font-semibold text-3xl md:text-4xl drop-shadow-lg">
+          About Dklean
+        </h2>
+      </div>
+      {/* Background Image Section ends */}
 
-    {/* 2. Members Section */}
-    {/* <Members /> */}
+      {/* 2. Members Section */}
+      {/* <Members /> */}
 
-    {/* 3. About Sections (Alternating Left-Right Layout) */}
-    <LeftImgAbout 
-      img="https://savechildlife.org/uploads/who-we-are-1.png"
-      heading="Who We Are"
-      description="Dklean Health Care Public Charitable Trust (N.G.O.) is dedicated to revolutionizing the medical industry by providing top-tier healthcare services tailored to every patient’s needs. Our team consists of highly skilled professionals who are committed to delivering exceptional medical care. We focus on patient-centered approaches, ensuring that our services prioritize comfort, accessibility, and efficiency."
-    />
+      {/* 3. About Sections (Alternating Left-Right Layout) */}
+      <LeftImgAbout
+  img="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Iskon_Temple%2C_Vrindawan.jpg/1200px-Iskon_Temple%2C_Vrindawan.jpg"
+  heading="हम कौन हैं?"
+  description="कृष्ण जन्मभूमि मुक्ति दल एक सामाजिक और धार्मिक संगठन है, जिसका मुख्य उद्देश्य मथुरा में भगवान श्रीकृष्ण की वास्तविक जन्मस्थली को उसके प्राचीन स्वरूप में पुनः स्थापित करना है। यह संगठन विभिन्न धार्मिक, कानूनी, और सामाजिक स्तरों पर सक्रिय रूप से काम कर रहा है, ताकि ऐतिहासिक स्थलों की सुरक्षा सुनिश्चित की जा सके। हम केवल धार्मिक कार्यों तक सीमित नहीं हैं, बल्कि भारतीय संस्कृति और सनातन परंपराओं के संरक्षण के लिए भी प्रयासरत हैं। हमारा विश्वास है कि श्रीकृष्ण की जन्मभूमि का पुनरुद्धार सिर्फ एक धार्मिक कार्य नहीं, बल्कि भारत की गौरवशाली सांस्कृतिक विरासत को पुनर्स्थापित करने का एक प्रयास है।"
+/>
 
-    <RightImgAbout 
-      img="https://ak.picdn.net/shutterstock/videos/1021087117/thumb/11.jpg"
-      heading="Our Vision"
-      description="Our vision is to make quality healthcare accessible to everyone, everywhere. We strive to bridge the gap between medical professionals and patients by offering state-of-the-art healthcare solutions. With our innovative approach and commitment to excellence, we aim to create a future where high-quality medical care is available at your doorstep."
-    />
+<RightImgAbout
+  img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQWhvLovGoSEWRiPRlwE31sENv8TinbgerKXhBPbZXsEvEX8O69YPOzpCZV9oMufXkd9Y&usqp=CAU"
+  heading="हमारा उद्देश्य"
+  description="हमारा मुख्य उद्देश्य भगवान श्रीकृष्ण की जन्मभूमि को अतिक्रमण से मुक्त कराना और उसे उसके प्राचीन स्वरूप में पुनर्स्थापित करना है। यह केवल एक धार्मिक आंदोलन नहीं है, बल्कि एक सांस्कृतिक और ऐतिहासिक विरासत की रक्षा करने का प्रयास है। हमारी मुहिम भारतीय समाज में जागरूकता फैलाने, न्यायसंगत समाधान की दिशा में काम करने और सभी संबंधित कानूनी प्रक्रियाओं का पालन करने पर केंद्रित है। हम यह सुनिश्चित करना चाहते हैं कि सनातन धर्म के अनुयायियों को उनके पूजनीय स्थलों का सम्मानपूर्वक दर्शन करने का अधिकार मिले और यह स्थान धार्मिक स्वतंत्रता के मूल्यों के अनुरूप संरक्षित रहे।"
+/>
 
-    <LeftImgAbout 
-      img="https://www.healthcarefinancenews.com/sites/healthcarefinancenews.com/files/styles/companion_top/public/Digital%20Composite%20Image%20Of%20Surgeon%20Touching%20Interface_HFN%20-%20Getty%20.jpg?itok=EX7iFnvf"
-      heading="Innovative Healthcare Solutions"
-      description="We embrace technological advancements to enhance healthcare services. Our platform integrates the latest medical technologies to ensure efficient diagnostics, treatment, and patient management. From AI-powered health assessments to telemedicine consultations, we continuously innovate to improve patient outcomes and satisfaction."
-    />
+<LeftImgAbout
+  img="https://oneday.travel/wp-content/uploads/wootrips-1-day-delhi-to-mathura-and-vrindavan-sightseeing-tour-package-private-car-header.jpg"
+  heading="हमारी रणनीति"
+  description="कृष्ण जन्मभूमि मुक्ति दल अपनी मांगों को पूरा करने के लिए कानूनी, सामाजिक और आध्यात्मिक स्तर पर काम कर रहा है। हम देशभर में धार्मिक सभाएँ, संगोष्ठियाँ और रथ यात्राएँ आयोजित कर रहे हैं ताकि लोगों को इस आंदोलन की महत्ता के बारे में जागरूक किया जा सके। इसके साथ ही, हम भारतीय न्याय प्रणाली के माध्यम से कानूनी लड़ाई लड़ रहे हैं, ताकि ऐतिहासिक साक्ष्यों के आधार पर कृष्ण जन्मभूमि को उसके मूल स्वरूप में वापस लाया जा सके। हमारा विश्वास है कि शांतिपूर्ण और वैधानिक तरीकों से यह लक्ष्य प्राप्त किया जा सकता है, जिससे सभी सनातन धर्मावलंबियों का धार्मिक विश्वास सुरक्षित रहे।"
+/>
 
-    <RightImgAbout 
-      img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRi7aoWenGMWoMl_MfO3q5JkjUR0poKSz5eDw&s"
-      heading="Our Dedicated Team"
-      description="At Dklean Healthcare, our team is our biggest strength. We bring together experienced doctors, skilled nurses, and dedicated healthcare professionals who work tirelessly to provide the best medical services. Our team members are driven by passion, empathy, and a commitment to improving lives through quality healthcare."
-    />
+<RightImgAbout
+  img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVuoU2FrBef8kgyHqN4GBSvegRDYUbBipB5w&s"
+  heading="धार्मिक स्वतंत्रता और न्याय"
+  description="भारत में धार्मिक स्वतंत्रता और न्याय हर नागरिक का अधिकार है, और कृष्ण जन्मभूमि मुक्ति दल इसी सिद्धांत के आधार पर अपने प्रयास कर रहा है। हम भगवान श्रीकृष्ण की जन्मस्थली को मुक्त कर उसे सही स्वरूप में पुनर्स्थापित करने के लिए कानूनी मार्ग अपना रहे हैं। ऐतिहासिक और पुरातात्विक तथ्यों के आधार पर, हम यह सिद्ध करने की दिशा में प्रयासरत हैं कि यह स्थान सनातन धर्म के अनुयायियों के लिए अत्यंत पवित्र है और इसकी धार्मिक स्वतंत्रता सुनिश्चित की जानी चाहिए। हमारी यह लड़ाई केवल एक स्थान विशेष की मुक्ति तक सीमित नहीं है, बल्कि यह सनातन संस्कृति और विरासत के संरक्षण का भी प्रतीक है।"
+/>
 
-    <LeftImgAbout 
-      img="https://www.camh.ca/-/media/professionals-images/conditions-disorders/patient-family-care-graphic-feb2023-png.png?h=500&w=521&hash=D7AA57B197E439E77702104A17896969"
-      heading="Patient-Centered Approach"
-      description="We understand that each patient is unique, and so are their medical needs. Our patient-centered approach ensures that we provide personalized healthcare solutions. Whether it's routine check-ups, specialized treatments, or emergency care, we prioritize the well-being and comfort of our patients above all else."
-    />
+<LeftImgAbout
+  img="https://akashgyanvatika.com/wp-content/uploads/2019/09/skw.jpg"
+  heading="संस्कृति और विरासत की रक्षा"
+  description="भारत एक प्राचीन और समृद्ध सांस्कृतिक धरोहर वाला देश है, और कृष्ण जन्मभूमि इसका एक महत्वपूर्ण हिस्सा है। यह स्थान सिर्फ एक मंदिर नहीं, बल्कि सनातन धर्म के इतिहास, संस्कृति और परंपराओं का प्रतीक है। कृष्ण जन्मभूमि मुक्ति दल इस पावन स्थल को इसके प्राचीन स्वरूप में पुनर्स्थापित करने के लिए कार्यरत है। हम शिक्षा, मीडिया, और सांस्कृतिक गतिविधियों के माध्यम से भारतीय समाज को जागरूक कर रहे हैं कि यह केवल धार्मिक स्थान नहीं, बल्कि एक ऐतिहासिक धरोहर भी है, जिसे संरक्षित करने की जिम्मेदारी हम सभी की है। यह अभियान आने वाली पीढ़ियों को हमारी गौरवशाली परंपराओं से जोड़ने का भी एक प्रयास है।"
+/>
 
-    <RightImgAbout 
-      img="https://visualmodo.com/wp-content/uploads/2018/10/How-To-Expand-Your-Business-Reach.jpg"
-      heading="Expanding Our Reach"
-      description="We believe that quality healthcare should not be limited by geography. Our services extend beyond local boundaries, bringing world-class medical care to communities that need it the most. By leveraging digital healthcare solutions and an extensive network of medical professionals, we aim to make a global impact."
-    />
+<RightImgAbout
+  img="https://visualmodo.com/wp-content/uploads/2018/10/How-To-Expand-Your-Business-Reach.jpg"
+  heading="हमारे प्रयास"
+  description="कृष्ण जन्मभूमि मुक्ति दल केवल मंदिर निर्माण तक सीमित नहीं है, बल्कि यह एक व्यापक सामाजिक और सांस्कृतिक जागरूकता आंदोलन भी है। हम विचार गोष्ठियों, धार्मिक सभाओं, और आध्यात्मिक आयोजनों के माध्यम से समाज में जागरूकता फैला रहे हैं। इसके अलावा, हम कानूनी रूप से सभी आवश्यक दस्तावेजों और ऐतिहासिक साक्ष्यों को एकत्र कर सरकार और न्यायालय के समक्ष प्रस्तुत कर रहे हैं। इस उद्देश्य की पूर्ति के लिए, हम देशभर में सहयोगी संगठनों, संतों, और समाज के प्रमुख लोगों के साथ मिलकर कार्य कर रहे हैं, ताकि यह आंदोलन अधिक प्रभावशाली हो और अधिक से अधिक लोगों का समर्थन प्राप्त कर सके।"
+/>
 
-    <LeftImgAbout 
-      img="https://d2jx2rerrg6sh3.cloudfront.net/images/Article_Images/ImageForArticle_22572_16533781526443229.jpg"
-      heading="Shaping the Future of Healthcare"
-      description="Healthcare is evolving, and so are we. Our mission is to be at the forefront of this transformation by continuously improving and adapting to new medical advancements. We envision a world where healthcare is more accessible, efficient, and patient-friendly. Join us in shaping the future of healthcare."
-    />
-  </div>
-  )
-}
+<LeftImgAbout
+  img="https://akshiyogashala.org/blog/wp-content/uploads/2018/12/How-it-works-min.jpg"
+  heading="भविष्य की दृष्टि"
+  description="हमारा सपना है कि आने वाली पीढ़ियाँ भगवान श्रीकृष्ण के वास्तविक जन्मस्थान के दर्शन कर सकें और उनकी आध्यात्मिक महिमा का अनुभव कर सकें। यह केवल वर्तमान पीढ़ी के लिए नहीं, बल्कि भारत की भविष्य की पीढ़ियों के लिए भी एक विरासत है। हम इस लक्ष्य की प्राप्ति के लिए कानूनी, सामाजिक, और धार्मिक स्तर पर लगातार प्रयास कर रहे हैं। हमारी दूरदृष्टि केवल कृष्ण जन्मभूमि की मुक्ति तक सीमित नहीं है, बल्कि पूरे देश में धर्म और संस्कृति के उत्थान के लिए काम करना है, ताकि सनातन परंपराओं को संरक्षित किया जा सके और हमारी धार्मिक स्वतंत्रता को बनाए रखा जा सके।"
+/>
 
-export default page
+
+
+    </div>
+
+    <Footer/>
+    
+    </>
+
+  );
+};
+
+export default Page;

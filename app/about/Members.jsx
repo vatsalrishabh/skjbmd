@@ -5,22 +5,22 @@ import Image from "next/image";  // Next.js optimized image handling
 
 const teamMembers = [
   {
-    name: "Mr. D. Kumar",
-    designation: "Path Lab & Physiotherapist",
-    img: "/members/dkum.jpeg",
-    contact: "8510090506",
+    name: "अशोक वत्स",
+    designation: "राष्ट्रीय कार्यकारी अध्यक्ष",
+    img: "/members/ashok.jpg",
+    contact: "8052688885",
   },
   {
-    name: "Dr. Mayank Kumar (PT)",
-    designation: "Physiotherapist (BPT, DNYS, CMS-ED, EMT)",
-    img: "/members/pramukh.jpeg",
-    contact: "+91 88822 28599",
+    name: "अनूप कुमार मिश्रा ",
+    designation: "संस्थापक सदस्य ",
+    img: "/members/anoop.jpeg",
+    contact: "+91 8052688885",
   },
   {
-    name: "Dr. Ashwani Kumar Rai",
-    designation: "MBBS, MS Orthopaedics",
-    img: "/members/pramukh.jpeg",
-    contact: "+91 85959 93431",
+    name: "अज्ञात ",
+    designation: "पद अज्ञात ",
+    img: "/members/head.jpeg",
+    contact: "+91 8052688885",
   },
 ];
 
@@ -28,7 +28,8 @@ const Members = () => {
   return (
     <div className="p-8 bg-gray-100 flex flex-col items-center">
       <h2 className="text-4xl font-bold text-center text-[#8f1b1b] mb-8">
-        Meet Our Experts
+     <p>श्री कृष्ण जन्म भूमि मुक्ति दल</p> 
+     <p> (प्रमुख सदस्य)</p>
       </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center place-items-center">

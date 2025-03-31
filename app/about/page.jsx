@@ -1,7 +1,7 @@
 import React from "react";
 import MapTooltip from "./MapTooltip";
 import Navbar from "../components/Navbar/Navbar";
-import aboutBg from "../../public/assets/aboutbg.jpg"
+// import aboutBg from "../../public/assets/aboutbg.jpg"
 import Footer from "../components/Navbar/Footer";
 
 import LeftImgAbout from "./LeftImgAbout";
@@ -14,14 +14,15 @@ const Page = () => {
     <div className="w-full">
       {/* 1. Background Image Section */}
       <div
-        className="flex flex-col justify-center items-center h-[70vh] bg-cover bg-center text-white text-center"
-        style={{ backgroundImage: `url(${aboutBg})` }}
-      >
+  className="flex flex-col justify-center items-center h-[70vh] bg-cover bg-center text-white text-center"
+  style={{ backgroundImage: "url('/assets/aboutbg.jpg')" }}
+>
+
         <h1 className="font-bold text-5xl md:text-6xl mb-4 drop-shadow-lg">
-          Dklean Healthcare
+        हमारे बारे में
         </h1>
         <h2 className="font-semibold text-3xl md:text-4xl drop-shadow-lg">
-          About Dklean
+          हरे कृष्णा 
         </h2>
       </div>
       {/* Background Image Section ends */}

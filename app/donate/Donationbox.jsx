@@ -201,7 +201,7 @@ const handleSubmit = async (e) => {
       <form onSubmit={handleSubmit}>
         {/* Donation Type Selection */}
         <div className="flex justify-center gap-4 mb-6">
-          {["Give Once", "Give Monthly"].map((type) => (
+          {["एक बार दान दें", "मासिक दान दें"].map((type) => (
             <div
               key={type}
               onClick={() => handleTypeChange(type)}
@@ -218,10 +218,10 @@ const handleSubmit = async (e) => {
 
         {/* Donation Amount Selection */}
         <div className="text-center mb-4 text-[#870407] font-semibold">
-          <HttpsIcon sx={{ color: "#fe6601" }} /> Choose an amount to donate
+          <HttpsIcon sx={{ color: "#fe6601" }} /> दान की राशि चुनें
         </div>
         <div className="flex justify-center gap-4 mb-6">
-          {(donationType === "Give Once" ? [1200, 2400, 3600, 5000] : [2000, 4000, 6000, 8000]).map((amount) => (
+          {(donationType === "एक बार दान दें" ? [1200, 2400, 3600, 5000] : [2000, 4000, 6000, 8000]).map((amount) => (
             <div
               key={amount}
               onClick={() => handleAmountClick(amount)}
@@ -237,7 +237,8 @@ const handleSubmit = async (e) => {
         </div>
 
         <div className="text-center mb-4 text-[#870407] font-semibold">
-          <VolunteerActivismIcon sx={{ color: "#fe6601" }} /> Help patients get treatment.
+          <VolunteerActivismIcon sx={{ color: "#fe6601" }} /> "दानं हि परमं धर्मं यद् दत्तं तत् पुनर् भवेत्।"
+          ➝ दान ही परम धर्म है, जो दिया जाता है वह कई गुना होकर पुनः प्राप्त होता है।
         </div>
 
         {/* Custom Amount Input */}

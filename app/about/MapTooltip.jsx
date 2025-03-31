@@ -1,48 +1,60 @@
-"use client";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import IndiaMap from "@svg-maps/india";
-import * as Tooltip from "@radix-ui/react-tooltip";
+import React from "react";
+import { Card, CardContent, Typography } from "@mui/material";
 
-const stateLeaders = {
-  "Uttar Pradesh": { pradeshAdhyaksh: "Yogi Adityanath", rashtriyaAdhyaksh: "Amit Shah" },
-  "Maharashtra": { pradeshAdhyaksh: "Devendra Fadnavis", rashtriyaAdhyaksh: "JP Nadda" },
-  "Karnataka": { pradeshAdhyaksh: "Basavaraj Bommai", rashtriyaAdhyaksh: "Amit Shah" },
+const orgData = {
+  name: "CEO",
+  children: [
+    {
+      name: "CTO",
+      children: [
+        { name: "Dev Team Lead" },
+        { name: "QA Lead" },
+      ],
+    },
+    {
+      name: "CFO",
+      children: [
+        { name: "Finance Manager" },
+        { name: "Accountant" },
+      ],
+    },
+    {
+      name: "COO",
+      children: [
+        { name: "Operations Manager" },
+        { name: "HR Manager" },
+      ],
+    },
+  ],
 };
 
-const MapTooltip = () => {
-  const [hoveredState, setHoveredState] = useState(null);
-
+const OrgChartNode = ({ node }) => {
   return (
-    <div className="relative flex justify-center">
-      <IndiaMap
-        className="w-full max-w-3xl"
-        onMouseEnter={(event) => {
-          const stateName = event.target.getAttribute("aria-label");
-          if (stateName && stateLeaders[stateName]) {
-            setHoveredState(stateName);
-          }
-        }}
-        onMouseLeave={() => setHoveredState(null)}
-      />
-
-      {hoveredState && (
-        <Tooltip.Root>
-          <Tooltip.Trigger asChild>
-            <div className="absolute z-50 p-3 bg-white border border-gray-300 shadow-lg rounded-md">
-              <p className="font-bold text-gray-700">{hoveredState}</p>
-              <p className="text-sm text-gray-600">
-                Pradesh Adhyaksh: {stateLeaders[hoveredState].pradeshAdhyaksh}
-              </p>
-              <p className="text-sm text-gray-600">
-                Rashtriya Adhyaksh: {stateLeaders[hoveredState].rashtriyaAdhyaksh}
-              </p>
-            </div>
-          </Tooltip.Trigger>
-        </Tooltip.Root>
+    <div className="flex flex-col items-center m-4">
+      <Card className="shadow-md p-2">
+        <CardContent>
+          <Typography variant="h6" className="text-center">
+            {node.name}
+          </Typography>
+        </CardContent>
+      </Card>
+      {node.children && (
+        <div className="flex mt-4 space-x-4 border-t-2 border-gray-300 pt-4">
+          {node.children.map((child, index) => (
+            <OrgChartNode key={index} node={child} />
+          ))}
+        </div>
       )}
     </div>
   );
 };
 
-export default MapTooltip;
+const OrgChart = () => {
+  return (
+    <div className="flex justify-center items-center min-h-screen p-8">
+      <OrgChartNode node={orgData} />
+    </div>
+  );
+};
+
+export default OrgChart;

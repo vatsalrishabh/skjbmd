@@ -6,6 +6,8 @@ import ContactUs from "../contact/ContactUs";
 import Marqueee from "../components/Marqueee";
 import LeftImgAbout from "../about/LeftImgAbout";
 import Members from "../about/Members";
+import VideoSlider from "../components/VideoSlider";
+import MapOfIndia from "../components/MapOfIndia";
 export default function Home() {
   return (
   <div className="Pathik-Main bg-[#ebd7a7]">
@@ -22,6 +24,8 @@ export default function Home() {
 />
 
 <Members/>
+<VideoSlider/>
+<MapOfIndia />
     <ContactUs/>
     <Footer />
   </div>

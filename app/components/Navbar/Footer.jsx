@@ -38,10 +38,18 @@ const Footer = () => {
             त्वरित लिंक
           </h1>
           <ul className="space-y-2">
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">मुख्य पृष्ठ</li>
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">हमारे बारे में</li>
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">उपदेश</li>
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">संपर्क करें</li>
+          <Link href="/home">
+          <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">मुख्य पृष्ठ</li>
+          </Link>
+          <Link href="/about">
+          <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">हमारे बारे में</li>
+          </Link>
+          <Link href="/about">
+          <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">गैलरी</li>
+          </Link>
+          <Link href="/about">
+          <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">संपर्क करें</li>
+          </Link>
           </ul>
         </div>
 

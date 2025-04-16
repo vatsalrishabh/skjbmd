@@ -11,15 +11,15 @@ const teamMembers = [
     contact: "8052688885",
   },
   {
-    name: "अनूप कुमार मिश्रा ",
-    designation: "संस्थापक सदस्य ",
-    img: "/members/anoop.jpeg",
+    name: "राजेश मणि त्रिपाठी ",
+    designation: "राष्ट्रीय अध्यक्ष ",
+    img: "/members/head.jpeg",
     contact: "+91 8052688885",
   },
   {
-    name: "अज्ञात ",
-    designation: "पद अज्ञात ",
-    img: "/members/head.jpeg",
+    name: "अनूप कुमार मिश्रा ",
+    designation: "संस्थापक सदस्य ",
+    img: "/members/anoop.jpeg",
     contact: "+91 8052688885",
   },
 ];

@@ -51,7 +51,7 @@ const ContactUs = () => {
     };
 
     fetchPincodeDetails();
-  }, [formData.pincode, data.state_name]);
+  }, [formData.pincode]);
 
   const handleCountryChange = (e) => {
     const country = e.target.value;
@@ -112,7 +112,14 @@ const ContactUs = () => {
       alert('कृपया अपना पूरा पता दर्ज करें।');
       return;
     }
+      try{
+const response = axios.post(`${BaseUrl}/api/`);
+if(response.data){
 
+}
+      }catch(error){
+console.log("Server error" + error)
+      }
     console.log('Form Data Submitted:', formData);
   };
 
@@ -228,6 +235,7 @@ const ContactUs = () => {
               type="text"
               name="state"
               placeholder="राज्य"
+              value={formData.state}
               className="p-3 border rounded-lg text-black placeholder-gray-700 bg-gray-100"
               onChange={handleChange}
               required
@@ -236,6 +244,7 @@ const ContactUs = () => {
               type="text"
               name="district"
               placeholder="जिला"
+              value = {formData.district}
               className="p-3 border rounded-lg text-black placeholder-gray-700 bg-gray-100"
               onChange={handleChange}
               required

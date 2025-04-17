@@ -35,11 +35,11 @@ const ContactUs = () => {
           const res = await axios.get(`https://pinlookup.in/api/pincode?pincode=${formData.pincode}`);
           const data = res.data?.data;
           console.log(res.data)
-          if (data && data.length > 0) {
+          if (data) {
             setFormData((prev) => ({
               ...prev,
-              district: data[0]?.district,
-              state: data[0]?.state,
+              district: data.district_name,
+              state: data.state_name,
             }));
           }
         } catch (error) {

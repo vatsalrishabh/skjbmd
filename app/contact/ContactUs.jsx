@@ -20,6 +20,8 @@ const ContactUs = () => {
     pincode: '',
     fullAddress: '',
   });
+  const [pincode, setPincode] = useState('');
+
 
   const [selectedCountry, setSelectedCountry] = useState('');
   const [showIndiaAddress, setShowIndiaAddress] = useState(false);
@@ -30,14 +32,11 @@ const ContactUs = () => {
   // Pincode logic
   useEffect(() => {
     const fetchPincodeDetails = async () => {
-      if (formData.pincode.length === 6) {
+      if (pincode.length === 6) {
         try {
-          const res = await axios.get(`https://pinlookup.in/api/pincode?pincode=${formData.pincode}`);
+          const res = await axios.get(`https://pinlookup.in/api/pincode?pincode=${pincode}`);
           const data = res.data?.data;
-          console.log(res.data)
           if (data) {
-            console.log(data.district_name)
-            console.log(data.state_name)
             setFormData((prev) => ({
               ...prev,
               district: data.district_name,
@@ -49,9 +48,10 @@ const ContactUs = () => {
         }
       }
     };
-
+  
     fetchPincodeDetails();
-  }, [formData.pincode]);
+  }, [pincode]);
+  
 
   const handleCountryChange = (e) => {
     const country = e.target.value;
@@ -68,7 +68,7 @@ const ContactUs = () => {
     setFormData({ ...formData, profilePhoto: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit  = async (e) => {
     e.preventDefault();
 
     // Validation for contact number (India - 10 digits)
@@ -112,14 +112,26 @@ const ContactUs = () => {
       alert('कृपया अपना पूरा पता दर्ज करें।');
       return;
     }
-      try{
-const response = axios.post(`${BaseUrl}/api/`);
-if(response.data){
-
-}
-      }catch(error){
-console.log("Server error" + error)
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
+      });
+  
+      const response = await axios.post(`${BaseUrl}/api/contact`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      if (response.data.success) {
+        alert("फॉर्म सफलतापूर्वक सबमिट हो गया है।");
+        // Reset form or navigate
       }
+    } catch (error) {
+      console.error("Server error:", error);
+      alert("सर्वर त्रुटि। कृपया बाद में प्रयास करें।");
+    }
     console.log('Form Data Submitted:', formData);
   };
 
@@ -258,17 +270,17 @@ console.log("Server error" + error)
             onChange={handleChange}
             required
           />
-         <input
+        <input
   type="text"
   name="pincode"
   placeholder="पिनकोड"
   className="p-3 border rounded-lg text-black placeholder-gray-700 bg-gray-100 w-full"
-  value={formData.pincode} // <-- controlled input
+  value={pincode}
   onChange={(e) => {
-    // Only allow numeric values up to 6 digits
     const val = e.target.value;
     if (/^\d{0,6}$/.test(val)) {
-      handleChange(e);
+      setPincode(val);
+      setFormData((prev) => ({ ...prev, pincode: val }));
     }
   }}
   required

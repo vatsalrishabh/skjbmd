@@ -36,6 +36,8 @@ const ContactUs = () => {
           const data = res.data?.data;
           console.log(res.data)
           if (data) {
+            console.log(data.district_name)
+            console.log(data.state_name)
             setFormData((prev) => ({
               ...prev,
               district: data.district_name,
@@ -128,7 +130,7 @@ const ContactUs = () => {
             <input
               type="text"
               name="referenceId"
-              placeholder="रिफरेंस आईडी"
+              placeholder="आधार नंबर"
               className="p-3 sm:mb-2 border rounded-lg text-black placeholder-gray-700 bg-gray-100"
               onChange={handleChange}
               required

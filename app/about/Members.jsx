@@ -26,7 +26,7 @@ const teamMembers = [
 
 const Members = () => {
   return (
-    <div className="p-8 bg-gray-100 flex flex-col items-center">
+    <div className="p-8 bg-gray-100 flex flex-col items-center  ">
       <h2 className="text-4xl font-bold text-center text-[#8f1b1b] mb-8">
      <p>श्री कृष्ण जन्म भूमि मुक्ति दल</p> 
      <p> (प्रमुख सदस्य)</p>

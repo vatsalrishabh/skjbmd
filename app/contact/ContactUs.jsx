@@ -51,7 +51,7 @@ const ContactUs = () => {
     };
 
     fetchPincodeDetails();
-  }, [formData.pincode]);
+  }, [formData.pincode, data.state_name]);
 
   const handleCountryChange = (e) => {
     const country = e.target.value;

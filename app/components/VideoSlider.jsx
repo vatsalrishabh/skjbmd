@@ -9,11 +9,11 @@ import { Modal, Box, IconButton } from "@mui/material";
 import { Close } from "@mui/icons-material";
 
 const videos = [
-  { id: "dQw4w9WgXcQ", title: "Video 1" },
-  { id: "3JZ_D3ELwOQ", title: "Video 2" },
-  { id: "2Vv-BfVoq4g", title: "Video 3" },
-  { id: "9bZkp7q19f0", title: "Video 4" },
-  { id: "L_jWHffIx5E", title: "Video 5" }
+  { id: "qqem8ZsTbJA", title: "Video 1" },
+  { id: "kbGac3tnDVs", title: "Video 2" },
+  { id: "A2mPnsoNVVc", title: "Video 3" },
+  { id: "xZRG-yecmFI", title: "Video 4" },
+  { id: "nirlteRrjoM", title: "Video 5" }
 ];
 
 const VideoSlider = () => {

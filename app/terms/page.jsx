@@ -1,53 +1,71 @@
 import React from "react";
-import { FaExclamationTriangle, FaUserShield, FaClipboardCheck, FaEnvelope } from "react-icons/fa";
+import {
+  FaExclamationTriangle,
+  FaUserShield,
+  FaClipboardCheck,
+  FaEnvelope,
+} from "react-icons/fa";
 
-const page = () => {
+const Page = () => {
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
-      <h1 className="text-3xl font-bold text-center mb-6">Terms & Conditions</h1>
-      
-      <p className="text-gray-600 text-sm text-center mb-4">Effective Date: March 29, 2025</p>
-      
+    <div className="max-w-4xl mx-auto p-6 rounded-lg mt-10" style={{ backgroundColor: "#ebd7a7" }}>
+      <h1 className="text-3xl font-bold text-center mb-4" style={{ color: "#870407" }}>
+        Terms & Conditions
+      </h1>
+
+      <p className="text-sm text-center mb-6" style={{ color: "#870407" }}>
+        Effective Date: March 29, 2025
+      </p>
+
       <div className="space-y-6">
-        <div className="flex items-start space-x-4 p-4 hover:bg-gray-100 rounded-lg transition">
-          <FaExclamationTriangle className="text-red-500 text-2xl" />
+        <div className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition">
+          <FaExclamationTriangle className="text-yellow-600 text-2xl mt-1" />
           <div>
-            <h2 className="text-xl font-semibold">Limitation of Liability</h2>
-            <p className="text-gray-600 text-sm">
-              We are not responsible for any damages arising from the use of our website.
+            <h2 className="text-xl font-semibold" style={{ color: "#870407" }}>
+              Use of Platform
+            </h2>
+            <p className="text-gray-700 text-sm mt-1">
+              This platform is intended solely for spiritual and religious engagement. Kindly refrain from using it for any unrelated or inappropriate purposes.
             </p>
           </div>
         </div>
-        
-        <div className="flex items-start space-x-4 p-4 hover:bg-gray-100 rounded-lg transition">
-          <FaUserShield className="text-blue-500 text-2xl" />
+
+        <div className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition">
+          <FaUserShield className="text-blue-600 text-2xl mt-1" />
           <div>
-            <h2 className="text-xl font-semibold">Rules of Conduct</h2>
-            <p className="text-gray-600 text-sm">
-              Users must comply with all applicable laws and regulations while using our services.
+            <h2 className="text-xl font-semibold" style={{ color: "#870407" }}>
+              Respectful Conduct
+            </h2>
+            <p className="text-gray-700 text-sm mt-1">
+              We expect all visitors and users to maintain mutual respect and humility in their interactions, aligned with our religious and moral values.
             </p>
           </div>
         </div>
-        
-        <div className="flex items-start space-x-4 p-4 hover:bg-gray-100 rounded-lg transition">
-          <FaClipboardCheck className="text-green-500 text-2xl" />
+
+        <div className="flex items-start space-x-4 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition">
+          <FaClipboardCheck className="text-green-600 text-2xl mt-1" />
           <div>
-            <h2 className="text-xl font-semibold">User Restrictions</h2>
-            <p className="text-gray-600 text-sm">
-              Users cannot use our platform for illegal activities, harassment, or spam.
+            <h2 className="text-xl font-semibold" style={{ color: "#870407" }}>
+              Donation Responsibility
+            </h2>
+            <p className="text-gray-700 text-sm mt-1">
+              Donations made are used for religious and community service activities. Kindly ensure correctness before donating. Refunds are only possible if funds haven’t yet been utilized.
             </p>
           </div>
         </div>
       </div>
-      
-      <div className="mt-6 border-t pt-4">
+
+      <div className="mt-6 pt-4 border-t border-gray-300">
         <div className="flex items-center space-x-3">
           <FaEnvelope className="text-gray-700 text-xl" />
-          <p className="text-gray-600">Contact us at: <span className="font-semibold">support@example.com</span></p>
+          <p className="text-gray-700 text-sm">
+            For queries, contact us at:{" "}
+            <span className="font-semibold">support@skjbmd.org</span>
+          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

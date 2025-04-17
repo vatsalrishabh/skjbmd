@@ -22,13 +22,13 @@ const Footer = () => {
         {/* कॉलम 2 */}
         <div className="col2">
           <h1 className="text-[#fe6601] text-xl font-semibold mb-4 hover:text-gray-500 transition-all duration-300">
-            हमारी सेवाएँ
+          टर्म्स एंड कंडीशन 
           </h1>
           <ul className="space-y-2">
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">दैनिक प्रार्थना</li>
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">आध्यात्मिक शिक्षा</li>
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">धार्मिक परामर्श</li>
-            <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">सामुदायिक सेवा</li>
+         <Link href ="/privacypolicy" ><li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">गोपनीयता नीति</li>  </Link>
+         <Link href ="/terms" > <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">नियम और शर्तें </li> </Link>
+         <Link href ="/cancelrefund" >  <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">रद्दीकरण और रिफंड नीति</li> </Link> 
+         <Link href ="/shippinganddelivery" >   <li className="hover:text-[#fe6601] transition-all duration-300 cursor-pointer">शिपिंग और डिलीवरी नीति</li>  </Link>
           </ul>
         </div>
 

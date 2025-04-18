@@ -4,11 +4,12 @@ import Image from 'next/image';
 import axios from 'axios';
 
 const ContactUs = () => {
+  console.log("Base URL:", process.env.NEXT_PUBLIC_BaseUrl);
   const [formData, setFormData] = useState({
-    referenceId: '',
+    referenceId:50,
     fullName: '',
     fatherOrHusband: '',
-    age: '',
+    age: '', 
     aadhaarNumber: '',
     contactNumber: '',
     email: '',
@@ -113,16 +114,25 @@ const ContactUs = () => {
       return;
     }
     try {
-      const data = new FormData();
-      Object.entries(formData).forEach(([key, value]) => {
-        data.append(key, value);
-      });
-  
-      const response = await axios.post(`${BaseUrl}/api/contact`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      console.log('formData object:', formData);
+
+  const data = new FormData();
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      data.append(key, value);
+    }
+  });
+
+  console.log('FormData contents:');
+  for (let [key, value] of data.entries()) {
+    console.log(`${key}:`, value);
+  }
+
+  const response = await axios.post(`${process.env.NEXT_PUBLIC_BaseUrl}/api/auth/registerUser`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
   
       if (response.data.success) {
         alert("फॉर्म सफलतापूर्वक सबमिट हो गया है।");
@@ -149,7 +159,8 @@ const ContactUs = () => {
             <input
               type="text"
               name="referenceId"
-              placeholder="आधार नंबर"
+              placeholder="सदस्यता शुल्क"
+              value={50}
               className="p-3 sm:mb-2 border rounded-lg text-black placeholder-gray-700 bg-gray-100"
               onChange={handleChange}
               required

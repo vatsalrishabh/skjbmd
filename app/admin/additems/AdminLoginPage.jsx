@@ -36,7 +36,8 @@ const AdminLoginPage = () => {
         const response = await axios.post("/api/admin/login", {
           email: formData.email,
           password: formData.password,
-          role: "admin",
+          role:formData.role,
+          
         });
         localStorage.setItem(
           "adminDetails",

@@ -22,6 +22,12 @@ const teamMembers = [
     img: "/members/anoop.jpeg",
     contact: "+91 8052688885",
   },
+  {
+    name: "Abhishek Pandey bhaiya ji",
+    designation: "संस्थापक सदस्य ",
+    img: "/members/anoop.jpeg",
+    contact: "+91 8052688885",
+  },
 ];
 
 const Members = () => {

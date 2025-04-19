@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client";
+
 import Navbar from "../components/Navbar/Navbar";
 import Footer from "../components/Navbar/Footer";
 import { Caraousal } from "../components/Caraousal";
@@ -8,10 +9,18 @@ import LeftImgAbout from "../about/LeftImgAbout";
 import Members from "../about/Members";
 import VideoSlider from "../components/VideoSlider";
 import MapOfIndia from "../components/MapOfIndia";
+
 export default function Home() {
   return (
-  <div className="Pathik-Main bg-[#ebd7a7]">
-  
+    <div className="Pathik-Main bg-[#ebd7a7]">
+      <audio autoPlay loop muted>
+        <source src="/skjbmd.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+      </audio>
+
+
+
+
     <Navbar />
     <Caraousal/>
     <Marqueee/>

@@ -16,7 +16,7 @@ const objectives = [
     icon: "/ourwork/blanket.png",
   },
   {
-    title: "ब्रह्मभोज",
+    title: "सामूहिक भोज",
     description: "समय-समय पर सामूहिक भोज का आयोजन।",
     icon: "/ourwork/feast.png",
   },

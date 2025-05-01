@@ -50,7 +50,7 @@ const Page = () => {
 
   return (
     <div>
-      {isAuthenticated ? (
+      {!isAuthenticated ? (
         <>
           <MobileAdminNav />
           <div className="flex">

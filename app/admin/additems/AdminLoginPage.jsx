@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Button, TextField, CircularProgress } from "@mui/material";
+import { Button, TextField, CircularProgress, MenuItem } from "@mui/material";
 import axios from "axios";
 import SnackBarr from "@/app/components/SnackBarr";
 import { jwtDecode } from "jwt-decode";
@@ -16,10 +16,46 @@ const AdminLoginPage = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    role:"",
     otp: "",
     newPassword: "",
     confirmPassword: "",
   });
+
+  const roles = [
+    { label: 'राष्ट्रीय प्रमुख', value: 'rashtriyapramukh' },
+    { label: 'सह प्रमुख', value: 'sahpramukh' },
+    { label: 'संगठन मंत्री', value: 'sangathanmantri' },
+    { label: 'सह संगठन मंत्री', value: 'sahsangathanmantri' },
+    { label: 'कोषाध्यक्ष', value: 'koshadhaksh' },
+    { label: 'कार्यालय सचिव', value: 'karyalaysachiv' },
+    { label: 'राष्ट्रीय प्रचारक', value: 'rashtriyapracharak' },
+    { label: 'सह प्रचारक', value: 'sahpracharak' },
+    { label: 'मीडिया प्रभारी', value: 'mediaprabhari' },
+  
+    { label: 'प्रदेश प्रमुख', value: 'pradeshpramukh' },
+    { label: 'प्रदेश सह प्रमुख', value: 'pradeshsahpramukh' },
+    { label: 'प्रदेश संगठन मंत्री', value: 'pradeshsangathanmantri' },
+    { label: 'प्रदेश सह संगठन मंत्री', value: 'pradeshsahsangathanmantri' },
+    { label: 'प्रदेश कोषाध्यक्ष', value: 'pradeshkoshadhaksh' },
+    { label: 'प्रदेश कार्यालय सचिव', value: 'pradeshkaryalaysachiv' },
+    { label: 'प्रदेश प्रचारक', value: 'pradeshpracharak' },
+    { label: 'प्रदेश सह प्रचारक', value: 'pradeshsahpracharak' },
+    { label: 'प्रदेश मीडिया प्रभारी', value: 'pradeshmediaprabhari' },
+  
+    { label: 'जिला प्रमुख', value: 'jilapramukh' },
+    { label: 'सह जिला प्रमुख', value: 'sahjilapramukh' },
+    { label: 'जिला संगठन मंत्री', value: 'jilasangathanmantri' },
+    { label: 'जिला सह संगठन मंत्री', value: 'jilasahsangathanmantri' },
+    { label: 'जिला कोषाध्यक्ष', value: 'jilakoshadhaksh' },
+    { label: 'जिला कार्यालय सचिव', value: 'jilakaryalaysachiv' },
+    { label: 'जिला प्रचारक', value: 'jilapracharak' },
+    { label: 'जिला सह प्रचारक', value: 'jilasahpracharak' },
+    { label: 'जिला मीडिया प्रभारी', value: 'districtmediaprabhari' },
+  
+    { label: 'सदस्य', value: 'member' },
+  ];
+  
 
   const handleSnackBar = (message, status) => {
     setSnackMessage(message);
@@ -33,7 +69,7 @@ const AdminLoginPage = () => {
     try {
       if (!changeTheForm) {
         // Step 1: Login request
-        const response = await axios.post("/api/admin/login", {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BaseUrl}/api/auth/loginUser`, {
           email: formData.email,
           password: formData.password,
           role:formData.role,
@@ -49,7 +85,7 @@ const AdminLoginPage = () => {
       } else {
         if (step === 1) {
           // Step 2: Send OTP request
-          await axios.post("/api/admin/sendotp", {
+          await axios.post(`${process.env.NEXT_PUBLIC_BaseUrl}/api/admin/sendotp`, {
             email: formData.email,
             role: "admin",
           });
@@ -57,8 +93,9 @@ const AdminLoginPage = () => {
           setStep(2);
         } else if (step === 2) {
           // Step 3: Reset Password request
-          await axios.post("/api/admin/resetpassword", {
+          await axios.post(`${process.env.NEXT_PUBLIC_BaseUrl}/api/admin/resetpassword`, {
             email: formData.email,
+            role:formData.role,
             newPassword: formData.newPassword,
             otp: formData.otp,
             confirmPassword: formData.confirmPassword,
@@ -80,7 +117,8 @@ const AdminLoginPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-black text-white">
+    <div className="flex justify-center items-center h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white">
+
       <div className="w-96 p-6 bg-gray-900 rounded-xl shadow-lg text-center">
         <h2 className="text-2xl font-bold text-blue-400">
           {changeTheForm
@@ -89,8 +127,9 @@ const AdminLoginPage = () => {
               : "Forgot Password"
             : "Admin Login"}
         </h2>
-        <div className="mt-6 space-y-4">
-          <TextField
+        <div className="mt-6 space-y-4 ">
+        <div className="mb-3">
+        <TextField
             name="email"
             type="email"
             label="Admin Email"
@@ -98,11 +137,53 @@ const AdminLoginPage = () => {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             InputProps={{ style: { color: "white" } }}
-            className="bg-gray-800 text-white"
+            className="bg-white text-white " 
           />
+        </div>
+
+{/* login roles */}
+        <div>
+        <div className="mb-3">
+        <TextField
+  select
+  label="अपना पद चुने"
+  name="role"
+  value={formData.role}
+  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+  fullWidth
+  variant="outlined"
+  sx={{
+    backgroundColor: 'white',
+    borderRadius: 1,
+    '& .MuiInputBase-input': { color: 'black' },
+    '& .MuiInputLabel-root': { color: 'black' },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: '#ccc',
+    },
+    '& .MuiSvgIcon-root': {
+      color: 'black',
+    },
+  }}
+>
+  <MenuItem value="" disabled>
+    अपना पद चुने
+  </MenuItem>
+  {roles.map((role) => (
+    <MenuItem key={role.value} value={role.value} sx={{ color: 'black' }}>
+      {role.label}
+    </MenuItem>
+  ))}
+</TextField>
+
+      </div>
+
+        </div>
+{/* login roles    */}
           
           {/* Show password only in login mode */}
           {!changeTheForm && (
+
+<div className="mb-3">
             <TextField
               name="password"
               type="password"
@@ -113,6 +194,7 @@ const AdminLoginPage = () => {
               InputProps={{ style: { color: "white" } }}
               className="bg-gray-800 text-white"
             />
+            </div>
           )}
 
           {/* Step 2: OTP Input */}

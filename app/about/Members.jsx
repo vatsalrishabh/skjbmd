@@ -14,7 +14,7 @@ const teamMembers = [
     name: "राजेश मणि त्रिपाठी ",
     designation: "राष्ट्रीय अध्यक्ष ",
     img: "/members/head.jpeg",
-    contact: "+91 8052688885",
+   
   },
   {
     name: "अनूप कुमार मिश्रा ",
@@ -53,7 +53,7 @@ const Members = () => {
               {member.designation}
             </p>
             <span className="text-gray-700 group-hover:text-gray-300 text-sm">
-              📞 {member.contact}
+              📞 {member.contact||"उपलब्ध नहीं |"}
             </span>
           </div>
         ))}

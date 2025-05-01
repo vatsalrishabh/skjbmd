@@ -10,15 +10,24 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import PaymentIcon from "@mui/icons-material/Payment";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 const LeftLaptoSideNav = () => {
   const router = useRouter();
 
   // Logout function
   const adminLogout = () => {
-    localStorage.removeItem("adminDetails"); // Clear admin details
-    window.location.reload();// Redirect to home page
+    localStorage.removeItem("adminDetails");
+    window.location.reload(); // Redirect to home page
   };
+
+  const navItems = [
+    { href: "/admin/manageorder", label: "Manage Orders", icon: <ListAltIcon /> },
+    { href: "/admin/additems", label: "Add Items", icon: <AddCircleOutlineIcon /> },
+    { href: "/admin/payments", label: "Payments", icon: <PaymentIcon /> },
+    { href: "/admin/gallery", label: "Gallery", icon: <PhotoLibraryIcon /> },
+     { href: "/admin/whatsapp", label: "Whatsapp Linking", icon: < WhatsAppIcon /> },
+  ];
 
   return (
     <div className="lg:block hidden w-64 h-screen bg-gray-900 text-white p-4 fixed left-0 top-0">
@@ -26,46 +35,17 @@ const LeftLaptoSideNav = () => {
 
       <nav>
         <ul className="space-y-4">
-          <li>
-            <Link
-              href="/admin/manageorder"
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition duration-300"
-            >
-              <ListAltIcon />
-              Manage Orders
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/admin/additems"
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition duration-300"
-            >
-              <AddCircleOutlineIcon />
-              Add Items
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/admin/payments"
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition duration-300"
-            >
-              <PaymentIcon />
-              Payments
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/admin/gallery"
-              className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition duration-300"
-            >
-              <PhotoLibraryIcon />
-              Gallery
-            </Link>
-          </li>
-
+          {navItems.map(({ href, label, icon }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition duration-300"
+              >
+                {icon}
+                {label}
+              </Link>
+            </li>
+          ))}
           <li>
             <button
               onClick={adminLogout}

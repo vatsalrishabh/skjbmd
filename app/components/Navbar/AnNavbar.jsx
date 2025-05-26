@@ -27,10 +27,18 @@ const AnNavbar = () => {
         {/* Logo */}
         <Image src={logo} alt="Logo" width={150} height={150} />
 
+      <div className="w-1/3 flex justify-around">
+        <Link href="/donate">
+            <button className="mt-2 bg-[#fe6601] text-white px-5 py-2 rounded-md font-semibold hover:bg-[#970403] transition-all">
+              दान करें
+            </button>
+          </Link>
+
         {/* Menu Button */}
         <button onClick={toggleMenu} className="text-[#970403] focus:outline-none">
           {isOpen ? <Close fontSize="large" /> : <Menu fontSize="large" />}
         </button>
+          </div>
       </div>
 
       {/* Menu Items */}

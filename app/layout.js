@@ -1,4 +1,5 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";  // for rajorpay script integration 1
 import "./globals.css";
 
 const geistSans = Geist({
@@ -51,6 +52,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+          {/* ✅ Razorpay Script */}
+        <Script
+          src="https://checkout.razorpay.com/v1/checkout.js"
+          strategy="afterInteractive" // Ensures it's loaded only on client side
+        />
+         {/* ✅ Razorpay Script */}
         {children}
       </body>
     </html>

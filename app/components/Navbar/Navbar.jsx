@@ -55,7 +55,7 @@ const Navbar = () => {
   return (
     <div className="w-full h-[11vh] bg-[#ebd7a7] text-gray-800  ">
       {/* Laptop Navigation */}
-      <div className={`hidden lg:flex w-full fixed z-20 top-0 ${scrollNum ? "shadow-md" : ""} bg-[#ebd7a7] justify-center`}>
+      <div className={` md:flex lg:flex w-full fixed z-20 top-0 ${scrollNum ? "shadow-md" : ""} bg-[#ebd7a7] justify-center`}>
         <div className={`w-full h-[12vh] flex items-center px-10 ${scrollNum ? "shadow-lg" : ""}`}>
           {/* Logo */}
           <div className="w-1/6 flex justify-center">
@@ -95,7 +95,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <div className="sm:hidden">
+      <div className="sm:hidden ">
         <AnNavbar />
       </div>
     </div>

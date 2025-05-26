@@ -5,23 +5,34 @@ import Image from "next/image";  // Next.js optimized image handling
 
 const teamMembers = [
   {
-    name: "अशोक वत्स",
-    designation: "राष्ट्रीय कार्यकारी अध्यक्ष",
-    img: "/members/ashok.jpg",
-    contact: "8052688885",
-  },
-  {
     name: "राजेश मणि त्रिपाठी ",
     designation: "राष्ट्रीय अध्यक्ष ",
     img: "/members/head.jpeg",
    
   },
   {
+    name: "अशोक वत्स",
+    designation: "राष्ट्रीय कार्यकारी अध्यक्ष",
+    img: "/members/ashok.jpg",
+    // contact: "8052688885",
+  },
+  
+  {
     name: "अनूप कुमार मिश्रा ",
     designation: "संस्थापक सदस्य ",
     img: "/members/anoop.jpeg",
-    contact: "+91 8052688885",
+    // contact: "+91 8052688885",
   },
+    {
+    name: "महेंद्र तिवारी  ",
+    designation: "राष्ट्रीय संगठन मंत्री भारत ",
+    img: "/members/mahendratiwari.jpeg",
+    // contact: "+91 8052688885",
+  },
+
+
+  
+
 
 ];
 

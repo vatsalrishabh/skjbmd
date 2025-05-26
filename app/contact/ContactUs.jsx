@@ -77,6 +77,7 @@ const ContactUs = () => {
 
   const handleFileChange = (e) => {
     setFormData({ ...formData, profilePhoto: e.target.files[0] });
+    console.log(e.target.files)
   };
 
   const handleSubmit = async (e) => {
@@ -180,7 +181,7 @@ const ContactUs = () => {
         }
       });
 
-      console.log("FormData contents:");
+      console.log(data);
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BaseUrl}/api/auth/verifyOtp`,

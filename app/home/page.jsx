@@ -10,6 +10,7 @@ import Members from "../about/Members";
 import VideoSlider from "../components/VideoSlider";
 import MapOfIndia from "../components/MapOfIndia";
 import SpeedDiall from "../components/SpeedDial/SpeedDiall";
+import IdCardDownload from "../components/IdCardDownload";
 
 export default function Home() {
   return (
@@ -37,6 +38,7 @@ export default function Home() {
 <VideoSlider/>
 <MapOfIndia />
     <ContactUs/>
+    <IdCardDownload />
     <Footer />
     <SpeedDiall/>
   </div>

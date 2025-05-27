@@ -53,7 +53,7 @@ const Page = () => {
       {isAuthenticated ? (
         <>
           <MobileAdminNav />
-          <div className="flex">
+          <div className="flex laptop">
             <LeftLaptoSideNav />
             <RLaptopSideNav />
           </div>

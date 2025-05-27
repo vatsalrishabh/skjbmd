@@ -10,7 +10,7 @@ const RightGallery = () => {
       ];
 
   return (
-    <div className='lg:w-[83%] w-full absolute right-0 h-[100vh] bg-slate-200 p-6'>
+    <div className='lg:w-[84%] w-full absolute right-0 h-[100vh] bg-slate-200 p-6'>
         <div className="p-4">
     <AdminBreadCrumbs links={breadcrumbLinks} name="Gallery" />    {/*only the breadcrumbs */}
 

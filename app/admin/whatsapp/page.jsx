@@ -8,8 +8,8 @@ const page = () => {
   const [qrCode, setQrCode] = useState(null);
 
   useEffect(() => {
-    // const socket = io("http://localhost:3001/"); // Connect to the server
-      const socket = io("https://api.skjbmd.org/"); // Connect to the server
+const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
+
 
     // Listen for QR code from the server
     socket.on("qr", (qr) => {

@@ -5,50 +5,49 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Icons
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import PaymentIcon from "@mui/icons-material/Payment";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"; // ID Card fee
+import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism"; // Donation
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech"; // Rank
+import WhatsAppIcon from "@mui/icons-material/WhatsApp"; // WhatsApp Linking
+import LogoutIcon from "@mui/icons-material/Logout"; // Logout
 
 const MobileAdminNav = () => {
   const router = useRouter();
 
-  // Logout function
   const adminLogout = () => {
-    localStorage.removeItem("adminDetails"); // Clear admin details
-    window.location.reload();// Redirect to home page
+    localStorage.removeItem("adminDetails");
+    window.location.reload();
   };
 
   return (
     <div className="lg:hidden fixed bottom-0 left-0 w-full bg-gray-900 text-white p-2 flex justify-around items-center shadow-md z-10">
-      <Link href="/admin/manageorder" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
-        <ListAltIcon />
-        <span>Orders</span>
+      
+      <Link href="/admin/idcardcollection" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
+        <MonetizationOnIcon />
+        <span>आईडी शुल्क</span>
       </Link>
 
-      <Link href="/admin/additems" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
-        <AddCircleOutlineIcon />
-        <span>Add Items</span>
+      <Link href="/admin/donation" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
+        <VolunteerActivismIcon />
+        <span>दान राशि</span>
       </Link>
 
-      <Link href="/admin/payments" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
-        <PaymentIcon />
-        <span>Payments</span>
+      <Link href="/admin/giverank" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
+        <MilitaryTechIcon />
+        <span>पद दें</span>
       </Link>
 
-      <Link href="/admin/gallery" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
-        <PhotoLibraryIcon />
-        <span>Gallery</span>
+      <Link href="/admin/whatsapp" className="flex flex-col items-center text-xs hover:text-gray-300 transition">
+        <WhatsAppIcon />
+        <span>व्हाट्सएप</span>
       </Link>
 
-      {/* Logout Button */}
       <button
         onClick={adminLogout}
         className="flex flex-col items-center text-xs hover:text-gray-300 transition"
       >
-        <ExitToAppIcon />
-        <span>Logout</span>
+        <LogoutIcon />
+        <span>लॉगआउट</span>
       </button>
     </div>
   );

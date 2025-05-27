@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const MapOfIndia = () => {
@@ -57,6 +58,59 @@ const MapOfIndia = () => {
       });
     }
   }, [selectedState]);
+
+  useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BaseUrl}/api/auth/admin/getAllDoctors`
+      );
+      if (response.status === 200) {
+        const userData = response.data.data;
+
+        const mappedStateInfo = {};
+
+        userData.forEach((user) => {
+          const stateName =
+            user?.address?.state?.trim() || "Unknown State";
+
+          if (!mappedStateInfo[stateName]) {
+            mappedStateInfo[stateName] = {
+              pradeshAdhyaksh: "",
+              pracharak: "",
+              sanyojak: "",
+              mahamantri: "",
+            };
+          }
+
+          switch (user.role) {
+            case "pradeshadhyaksh":
+              mappedStateInfo[stateName].pradeshAdhyaksh = user.name;
+              break;
+            case "pracharak":
+              mappedStateInfo[stateName].pracharak = user.name;
+              break;
+            case "sanyojak":
+              mappedStateInfo[stateName].sanyojak = user.name;
+              break;
+            case "mahamantri":
+              mappedStateInfo[stateName].mahamantri = user.name;
+              break;
+            default:
+              break;
+          }
+        });
+
+        setStateInfo(mappedStateInfo);
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  fetchUsers();
+}, []);
+
 
   return (
     <div className="overflow-auto max-w-full max-h-screen lg:flex ">

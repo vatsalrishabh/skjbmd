@@ -5,28 +5,48 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Icons
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import PaymentIcon from "@mui/icons-material/Payment";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"; // ID card fee
+import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism"; // Donation
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech"; // Rank
+import CollectionsIcon from "@mui/icons-material/Collections"; // Gallery
+import WhatsAppIcon from "@mui/icons-material/WhatsApp"; // WhatsApp Linking
+import LogoutIcon from "@mui/icons-material/Logout"; // Logout
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 
 const LeftLaptoSideNav = () => {
   const router = useRouter();
 
-  // Logout function
   const adminLogout = () => {
     localStorage.removeItem("adminDetails");
-    window.location.reload(); // Redirect to home page
+    window.location.reload();
   };
 
   const navItems = [
-    { href: "/admin/manageorder", label: "Manage Orders", icon: <ListAltIcon /> },
-    { href: "/admin/additems", label: "Add Items", icon: <AddCircleOutlineIcon /> },
-    { href: "/admin/payments", label: "Payments", icon: <PaymentIcon /> },
-    { href: "/admin/gallery", label: "Gallery", icon: <PhotoLibraryIcon /> },
-     { href: "/admin/whatsapp", label: "Whatsapp Linking", icon: < WhatsAppIcon /> },
+    {
+      href: "/admin/idcardcollection",
+      label: "आईडी कार्ड शुल्क",
+      icon: <MonetizationOnIcon />,
+    },
+    {
+      href: "/admin/donation",
+      label: "दान राशि",
+      icon: <VolunteerActivismIcon />,
+    },
+    {
+      href: "/admin/giverank",
+      label: "पद प्रदान करें",
+      icon: <MilitaryTechIcon />,
+    },
+    {
+      href: "/admin/gallery",
+      label: "गैलरी",
+      icon: <CollectionsIcon />,
+    },
+    {
+      href: "/admin/whatsapp",
+      label: "व्हाट्सएप लिंकिंग",
+      icon: <WhatsAppIcon />,
+    },
   ];
 
   return (

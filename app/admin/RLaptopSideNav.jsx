@@ -2,22 +2,56 @@
 import React from "react";
 import DashboardCard from "./DashboardCard";
 
-// Import Icons
-import ListAltIcon from "@mui/icons-material/ListAlt";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import PaymentIcon from "@mui/icons-material/Payment";
-import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+// Import New Icons
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+import CollectionsIcon from "@mui/icons-material/Collections";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+
+// Admin breadcrumb if needed
 import AdminBreadCrumbs from "../components/Admin/AdminBreadCrumbs";
-// import { useSelector } from "react-redux";
 
-// Data Array for Cards
-
+// New Data Array for Cards
 const cardData = [
-  { heading: "Manage Orders", number: 1250, Icon: ListAltIcon, bgColor: "#4A90E2", link:"admin/manageorder" },
-  { heading: "Add Items", number: 320, Icon: AddCircleOutlineIcon, bgColor: "#16a34a", link:"admin/additems" },
-  { heading: "Payments", number: "₹35,420", Icon: PaymentIcon, bgColor: "#d97706", link:"admin/payments" },
-  { heading: "Gallery", number: 75, Icon: PhotoLibraryIcon, bgColor: "#9333ea", link:"admin/gallery" },
+  {
+    heading: "आईडी कार्ड शुल्क",
+    number: 250,
+    Icon: MonetizationOnIcon,
+    bgColor: "#4A90E2",
+    link: "/admin/idcardcollection",
+  },
+  {
+    heading: "दान राशि",
+    number: "₹1,02,000",
+    Icon: VolunteerActivismIcon,
+    bgColor: "#16a34a",
+    link: "/admin/donation",
+  },
+  {
+    heading: "पद प्रदान करें",
+    number: 58,
+    Icon: MilitaryTechIcon,
+    bgColor: "#d97706",
+    link: "/admin/giverank",
+  },
+  {
+    heading: "गैलरी",
+    number: 112,
+    Icon: CollectionsIcon,
+    bgColor: "#9333ea",
+    link: "/admin/gallery",
+  },
+  {
+    heading: "व्हाट्सएप लिंकिंग",
+    number: 35,
+    Icon: WhatsAppIcon,
+    bgColor: "#22c55e",
+    link: "/admin/whatsapp",
+  },
 ];
+
+
 
 const breadcrumbLinks = [
     { label: "Admin", href: "/admin" },
@@ -27,7 +61,7 @@ const RLaptopSideNav = () => {
   // const products = useSelector((state) => state.allProducts.products);
   // console.log(products);
   return (
-    <div className="lg:w-[83%] w-full absolute right-0 h-[100vh] bg-slate-200 p-6">
+    <div className="lg:w-[84%] h-[100vh] w-full absolute right-0  bg-slate-200 p-6">
       {/* Grid Layout: 3 Columns on Large Screens, 1 Column on Small Screens */}
       <div className="p-4">
       <AdminBreadCrumbs links={breadcrumbLinks} name="Admin Dashboard" />

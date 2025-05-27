@@ -16,17 +16,15 @@ jobs:
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v0.1.8
         with:
-          host: 198.38.87.182        # Replace with your VPS IP
-          username: root             # Or your VPS user
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key stored in GitHub Secrets
+          host: 198.38.87.182        # Your VPS IP
+          username: root             # Your VPS username (or 'skjbmd' if preferred)
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            REPO_DIR="/home/skjbmd/public_html"
-            if [ ! -d "$REPO_DIR" ]; then
-              git clone git@github.com:vatsalrishabh/skjbmd-express.git $REPO_DIR
-            else
-              cd $REPO_DIR
-              git pull origin main
-            fi
-            cd $REPO_DIR
+            cd /home/skjbmd
+            # Remove old folder to avoid partial updates
+            rm -rf public_html
+            # Clone fresh copy of your repo
+            git clone git@github.com:vatsalrishabh/skjbmd.git public_html
+            cd public_html
             npm install
-            pm2 reload skjbmd.org --update-env
+            pm2 reload skjbmd.org

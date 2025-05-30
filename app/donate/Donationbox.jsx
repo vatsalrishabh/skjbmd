@@ -130,10 +130,10 @@ const handleSubmit = async (e) => {
       // const order = response.data; 
      
       const options = {
-        key: 'rzp_test_l0gnUnaG8U4VmM',
+        key:`${process.env.NEXT_PUBLIC_RAZORPAY_KEY}`,
         amount: (customAmount || selectedAmount) * 100,
         currency: "INR",
-        name: 'Dklean HealthCare',
+        name: 'श्री कृष्ण जन्म भूमि मुक्ति दल',
         description: 'Test Transaction',
         order_id: response.data.id,  // Ensure `order.id` exists
         callback_url: `${process.env.NEXT_PUBLIC_BaseUrl}/api/donations/paymentSuccess`,

@@ -1,11 +1,53 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import {jwtDecode} from "jwt-decode";
 import io from "socket.io-client";
 import LeftLaptoSideNav from "../LeftLaptoSideNav";
+import AdminLoginPage from "../additems/AdminLoginPage";
 
 const page = () => {
   const [status, setStatus] = useState("Connecting...");
   const [qrCode, setQrCode] = useState(null);
+        const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+           const checkAuth = () => {
+                 let storedAdmin = localStorage.getItem("adminDetails");
+             
+                 if (storedAdmin) {
+                   try {
+                     storedAdmin = JSON.parse(storedAdmin);
+                     const decodedToken = jwtDecode(storedAdmin.token);
+             
+                     // Check if token is expired
+                     if (decodedToken.exp * 1000 < Date.now()) {
+                       console.log("Session expired. Logging out...");
+                       logoutAdmin();
+                     } else {
+                       setIsAuthenticated(true);
+                     }
+                   } catch (error) {
+                     console.error("Invalid token:", error);
+                     logoutAdmin();
+                   }
+                 } else {
+                   setIsAuthenticated(false);
+                 }
+               };
+             
+               const logoutAdmin = () => {
+                 localStorage.removeItem("adminDetails");
+                 setIsAuthenticated(false);
+               };
+
+                 useEffect(() => {
+                        checkAuth();
+                    
+                        // Listen for storage changes (e.g., logout from another tab)
+                        window.addEventListener("storage", checkAuth);
+                        return () => {
+                          window.removeEventListener("storage", checkAuth);
+                        };
+                      }, []);
 
   useEffect(() => {
 const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
@@ -28,7 +70,12 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
   }, []);
 
   return (
-<div className="flex">
+
+
+     <div>
+          {isAuthenticated ? (
+            <>
+          <div className="flex">
 <LeftLaptoSideNav />
 {/* Right-side QR and Status */}
 <div className="lg:w-[83%] w-full absolute right-0 h-screen bg-slate-100 p-6 overflow-y-auto">
@@ -77,6 +124,11 @@ const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL);
 {/* Right-side QR and Status */}
 
     </div>
+            </>
+          ) : (
+            <AdminLoginPage />
+          )}
+        </div>
   );
 };
 

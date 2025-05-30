@@ -1,10 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {jwtDecode} from "jwt-decode";
+import AdminLoginPage from "./AdminLoginPage";
 import LeftLaptoSideNav from "../LeftLaptoSideNav";
 import MobileAdminNav from "../MobileAdminNav";
 import RightGiveRank from "./RightGiveRank";
-import AdminLoginPage from "./AdminLoginPage";
+
 
 
 const page = () => {

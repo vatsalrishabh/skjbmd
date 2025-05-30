@@ -157,7 +157,7 @@ const handlePrint = () => {
       <body>
         <div class="receipt-card">
           <div class="header">
-            <img src="${logo.src}" alt="NGO Logo" />
+       
             <h1 class="title">Donation Receipt</h1>
           </div>
           <div class="details">
@@ -241,6 +241,10 @@ const handlePrint = () => {
                         <div>
                           <FaReceipt className="inline mr-2 text-[#870407]" />
                           <span className="font-semibold">Transaction ID:</span> {donor.transactionId}
+                        </div>
+                          <div>
+                          <FaReceipt className="inline mr-2 text-[#870407]" />
+                          <span className="font-semibold">Pan Card:</span> {donor.pancard}
                         </div>
                         <div>
                           {donor.paymentStatus === "pending" ? (

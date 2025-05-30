@@ -2,6 +2,7 @@
 import AdminBreadCrumbs from '@/app/components/Admin/AdminBreadCrumbs';
 import React, { useState, useEffect } from 'react';
 import { TextField } from "@mui/material";
+import axios from 'axios';
 
 const RightDonations = () => {
   const [donations, setDonations] = useState([]);
@@ -9,38 +10,19 @@ const RightDonations = () => {
 
   // Sample data using the new schema
   useEffect(() => {
-    const sampleData = [
-      {
-        _id: "1",
-        donorName: "राहुल शर्मा",
-        donorEmail: "rahul@example.com",
-        donationAmount: 500,
-        donationDate: new Date(),
-        donationMessage: "सभी के कल्याण के लिए",
-        paymentStatus: "completed",
-        anonymous: false,
-        receiptSent: true,
-        razorpayId: "razorpay_123",
-        transactionId: "txn_123",
-        userId: "user_001"
-      },
-      {
-        _id: "2",
-        donorName: "सीमा वर्मा",
-        donorEmail: "seema@example.com",
-        donationAmount: 0,
-        donationDate: new Date(),
-        donationMessage: "",
-        paymentStatus: "pending",
-        anonymous: true,
-        receiptSent: false,
-        razorpayId: "razorpay_456",
-        transactionId: "txn_456",
-        userId: "user_002"
-      }
-    ];
+ 
 
-    setDonations(sampleData);
+    const getAllDonations = async ()=>{
+      try{
+ const response = await axios.get(`${process.env.NEXT_PUBLIC_BaseUrl}/api/donations/donorDetails`);
+ console.log(response.data.everyTran);
+     setDonations(response.data.everyTran);
+      }catch(error){
+        console.log(error)
+      }
+     
+    }
+    getAllDonations();
   }, []);
 
   const filteredDonations = donations.filter((donation) =>

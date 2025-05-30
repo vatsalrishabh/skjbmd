@@ -55,8 +55,8 @@ const DonationHistory = ({ donorDetails, transactions }) => {
         <BreadCrumb
           first="Patient Dashboard"
           second="Donation Page"
-          firstLink="/donorlogin"
-          secondLink="/donorlogin"
+          firstLink="/donate"
+          secondLink="/donate"
         />
       </div>
 

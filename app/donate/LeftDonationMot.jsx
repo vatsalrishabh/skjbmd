@@ -15,7 +15,7 @@ const LeftDonationMot = () => {
           धर्म रक्षा और गौ सेवा हेतु आपका योगदान
         </h2>
         <div className="text-center animate__animated animate__bounce animate__infinite">
-          <Link href="/donorlogin">
+          <Link href="/donate">
             <button className="bg-[#fe6601] text-white py-2 px-6 rounded-full text-xl font-semibold hover:bg-[#870407] transition">
               दान करें
             </button>
@@ -62,7 +62,7 @@ const LeftDonationMot = () => {
       </p>
 
       <div className="text-center mt-6 animate__animated animate__pulse animate__infinite">
-        <Link href="/donorlogin">
+        <Link href="/donate">
           <button className="bg-[#fe6601] text-white py-2 px-6 rounded-full text-xl font-semibold hover:bg-[#870407] transition">
             अभी दान करें
           </button>

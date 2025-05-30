@@ -1,4 +1,4 @@
-name: Deploy to VPS
+name: 🚀 Deploy SkjbmdFrontend to VPS
 
 on:
   push:
@@ -10,21 +10,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Deploy to VPS via SSH
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: 198.38.87.182        # Your VPS IP
-          username: root             # Your VPS username (or 'skjbmd' if preferred)
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /home/skjbmd
-            # Remove old folder to avoid partial updates
-            rm -rf public_html
-            # Clone fresh copy of your repo
-            git clone git@github.com:vatsalrishabh/skjbmd.git public_html
-            cd public_html
-            npm install
-            pm2 reload skjbmd.org
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Next.js app
+      run: npm run build
+
+    - name: Copy project to VPS
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_DEPLOY_KEY }}
+        source: "."
+        target: "/home/skjbmd/public_html"
+
+    - name: Restart PM2 app
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_DEPLOY_KEY }}
+        script: |
+          cd /home/skjbmd/public_html
+          npm install
+          npm run build
+          pm2 restart skjbmd.org  || pm2 start npm --name "skjbmd.org" -- start

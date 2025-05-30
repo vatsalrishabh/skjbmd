@@ -3,10 +3,13 @@ import React, { useEffect, useState } from "react";
 import HttpsIcon from "@mui/icons-material/Https";
 import VolunteerActivismIcon from "@mui/icons-material/VolunteerActivism";
 import axios from "axios";
+import { useRouter } from 'next/navigation';
+
 
 
 const Donationbox = ({donorDetails}) => {
-  const [donationType, setDonationType] = useState("Give Once");
+  const router = useRouter();
+const [donationType, setDonationType] = useState("एक बार दान दें");
   const [selectedAmount, setSelectedAmount] = useState("");
   const [customAmount, setCustomAmount] = useState("");
   const [loggedInUser, setLoggedInUser] = useState({});
@@ -75,6 +78,12 @@ useEffect(()=>{
   const validateForm = () => {
     const newErrors = {};
 
+
+    if (!(customAmount || selectedAmount)) {
+  newErrors.amount = "Please select or enter a donation amount.";
+}
+
+
     // Validate name (at least 4 characters)
     if (formData.name.trim().length < 4) {
       newErrors.name = "Name must be at least 4 characters.";
@@ -104,7 +113,9 @@ useEffect(()=>{
 
 const handleSubmit = async (e) => {
   e.preventDefault();
+
   if (validateForm()) {
+   
     const donationDetails = {
       donationType,
       amount: customAmount || selectedAmount,
@@ -114,7 +125,7 @@ const handleSubmit = async (e) => {
 
     try {
       // Make sure to await the API call
-      const response = await axios.post(`/api/donations/donateNow`, donationDetails);
+      const response = await axios.post( `${process.env.NEXT_PUBLIC_BaseUrl}/api/donations/donateNow`, donationDetails);
 
       // const order = response.data; 
      
@@ -125,7 +136,7 @@ const handleSubmit = async (e) => {
         name: 'Dklean HealthCare',
         description: 'Test Transaction',
         order_id: response.data.id,  // Ensure `order.id` exists
-        callback_url: `/api/donations/paymentSuccess`,
+        callback_url: `${process.env.NEXT_PUBLIC_BaseUrl}/api/donations/paymentSuccess`,
         prefill: {
           name: formData?.name,
           email: formData?.email,
@@ -136,14 +147,14 @@ const handleSubmit = async (e) => {
         },
         handler: async function (response) {
           try {
-            const verificationResponse = await axios.post(`/api/donations/verifyPayment`, {
+            const verificationResponse = await axios.post(`${process.env.NEXT_PUBLIC_BaseUrl}/api/donations/verifyPayment`, {
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_signature: response.razorpay_signature,
             });
 
             if (verificationResponse.data.status === 'ok') {
-              window.location.href = '/donate'; // take to donate page
+              router.push(`/donatereceipt/${verificationResponse.data.updatedDonation.razorpayId}`); // take to donate page
             } else {
               console.error('Payment verification failed');
             }
@@ -198,132 +209,182 @@ const handleSubmit = async (e) => {
   return (
     <div className="w-full bg-[#ebd7a7] py-10">
     <div className="w-full max-w-4xl mx-auto bg-white shadow-md rounded-lg p-5">
-      <form onSubmit={handleSubmit}>
-        {/* Donation Type Selection */}
-        <div className="flex justify-center gap-4 mb-6">
-          {["एक बार दान दें", "मासिक दान दें"].map((type) => (
-            <div
-              key={type}
-              onClick={() => handleTypeChange(type)}
-              className={`cursor-pointer px-6 py-3 rounded-xl text-center font-semibold transition ${
-                donationType === type
-                  ? "bg-[#870407] text-white"
-                  : "bg-white border border-[#870407] text-[#870407] hover:bg-[#870407] hover:text-white"
-              }`}
-            >
-              {type}
-            </div>
-          ))}
-        </div>
+     <form onSubmit={handleSubmit}>
+  {/* Donation Type Selection */}
+  <div className="flex justify-center gap-4 mb-6">
+    {["एक बार दान दें", "मासिक दान दें"].map((type) => (
+      <div
+        key={type}
+        onClick={() => handleTypeChange(type)}
+        className={`cursor-pointer px-6 py-3 rounded-xl text-center font-semibold transition ${
+          donationType === type
+            ? "bg-[#870407] text-white"
+            : "bg-white border border-[#870407] text-[#870407] hover:bg-[#870407] hover:text-white"
+        }`}
+      >
+        {type}
+      </div>
+    ))}
+  </div>
 
-        {/* Donation Amount Selection */}
-        <div className="text-center mb-4 text-[#870407] font-semibold">
-          <HttpsIcon sx={{ color: "#fe6601" }} /> दान की राशि चुनें
-        </div>
-        <div className="flex justify-center gap-4 mb-6">
-          {(donationType === "एक बार दान दें" ? [1200, 2400, 3600, 5000] : [2000, 4000, 6000, 8000]).map((amount) => (
-            <div
-              key={amount}
-              onClick={() => handleAmountClick(amount)}
-              className={`cursor-pointer px-6 py-3 rounded-xl text-center font-semibold transition ${
-                selectedAmount === amount
-                  ? "bg-[#870407] text-white"
-                  : "bg-white border border-[#870407] text-[#870407] hover:bg-[#870407] hover:text-white"
-              }`}
-            >
-              ₹ {amount}
-            </div>
-          ))}
-        </div>
+  {/* Donation Amount Selection */}
+  <div className="text-center mb-4 text-[#870407] font-semibold">
+    <HttpsIcon sx={{ color: "#fe6601" }} /> दान की राशि चुनें
+  </div>
+  <div className="flex justify-center gap-4 mb-2">
+    {(donationType === "एक बार दान दें" ? [1200, 2400, 3600, 5000] : [2000, 4000, 6000, 8000]).map((amount) => (
+      <div
+        key={amount}
+        onClick={() => handleAmountClick(amount)}
+        className={`cursor-pointer px-6 py-3 rounded-xl text-center font-semibold transition ${
+          selectedAmount === amount
+            ? "bg-[#870407] text-white"
+            : "bg-white border border-[#870407] text-[#870407] hover:bg-[#870407] hover:text-white"
+        }`}
+      >
+        ₹ {amount}
+      </div>
+    ))}
+  </div>
+  {errors.amount && <p className="text-red-500 text-sm text-center mb-2">{errors.amount}</p>}
 
-        <div className="text-center mb-4 text-[#870407] font-semibold">
-          <VolunteerActivismIcon sx={{ color: "#fe6601" }} /> "दानं हि परमं धर्मं यद् दत्तं तत् पुनर् भवेत्।"
-          ➝ दान ही परम धर्म है, जो दिया जाता है वह कई गुना होकर पुनः प्राप्त होता है।
-        </div>
+  {/* Donation Quote */}
+  <div className="text-center mb-4 text-[#870407] font-semibold">
+    <VolunteerActivismIcon sx={{ color: "#fe6601" }} /> "दानं हि परमं धर्मं यद् दत्तं तत् पुनर् भवेत्।"
+    ➝ दान ही परम धर्म है, जो दिया जाता है वह कई गुना होकर पुनः प्राप्त होता है।
+  </div>
 
-        {/* Custom Amount Input */}
-        <div className="flex justify-center mb-6">
-          <input
-            type="number"
-            placeholder="₹ Other Amount"
-            value={customAmount || selectedAmount}
-            onChange={(e) => {
-              setCustomAmount(e.target.value);
-              setSelectedAmount("");
-            }}
-            className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-60 focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
-            required
-          />
-        </div>
+  {/* Custom Amount Input */}
+  <div className="flex justify-center mb-2">
+    <input
+      type="number"
+      placeholder="₹ Other Amount"
+      value={customAmount || selectedAmount}
+      onChange={(e) => {
+        setCustomAmount(e.target.value);
+        setSelectedAmount("");
+      }}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-60 focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+      required
+    />
+  </div>
 
-        {/* User Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <input
-            type="text"
-            name="name"
-            placeholder="Name *"
-            value={formData.name}
-            onChange={handleInputChange}
-            className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
-            required
-          />
-          <input
-            type="date"
-            name="dob"
-            value={formData.dob}
-            onChange={handleInputChange}
-            className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
-            required
-          />
-        </div>
+  {/* Name & DOB */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <input
+        type="text"
+        name="name"
+        placeholder="Name *"
+        value={formData.name}
+        onChange={handleInputChange}
+        className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+        required
+      />
+      {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+    </div>
+    <div>
+      <input
+        type="date"
+        name="dob"
+        value={formData.dob}
+        onChange={handleInputChange}
+        className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+        required
+      />
+      {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
+    </div>
+  </div>
 
-        {/* Email & Mobile */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleInputChange}
-            className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
-            required
-          />
-          <input
-            type="number"
-            name="mobile"
-            placeholder="Mobile *"
-            value={formData.mobile}
-            onChange={handleInputChange}
-            className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
-            required
-          />
-        </div>
+  {/* Email & Mobile */}
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <input
+      type="email"
+      name="email"
+      placeholder="Email"
+      value={formData.email}
+      onChange={handleInputChange}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+      required
+    />
+    <div>
+      <input
+        type="number"
+        name="mobile"
+        placeholder="Mobile *"
+        value={formData.mobile}
+        onChange={handleInputChange}
+        className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+        required
+      />
+      {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
+    </div>
+  </div>
 
-        {/* Address */}
-        <input
-          type="text"
-          name="address"
-          placeholder="Address"
-          value={formData.address}
-          onChange={handleInputChange}
-          className="px-4 py-3 mb-6 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
-          required
-        />
+  {/* Address */}
+  <div className="mb-6">
+    <input
+      type="text"
+      name="address"
+      placeholder="Address"
+      value={formData.address}
+      onChange={handleInputChange}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+      required
+    />
+  </div>
 
-        {/* Pincode, City, State */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <input type="text" name="pincode" placeholder="Pincode" value={formData.pincode} onChange={handleInputChange} className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500" />
-          <input type="text" name="city" placeholder="City" value={formData.city} onChange={handleInputChange} className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500" required />
-          <input type="text" name="state" placeholder="State" value={formData.state} onChange={handleInputChange} className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500" required />
-        </div>
+  {/* Pincode, City, State */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <input
+      type="text"
+      name="pincode"
+      placeholder="Pincode"
+      value={formData.pincode}
+      onChange={handleInputChange}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+    />
+    <input
+      type="text"
+      name="city"
+      placeholder="City"
+      value={formData.city}
+      onChange={handleInputChange}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+      required
+    />
+    <input
+      type="text"
+      name="state"
+      placeholder="State"
+      value={formData.state}
+      onChange={handleInputChange}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+      required
+    />
+  </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-center mb-6">
-          <button type="submit" className="px-6 py-3 bg-[#870407] text-white rounded-xl font-semibold w-full sm:w-60">
-            Donate {loggedInUser.isloggedIn ? " " : "Anonymously"}
-          </button>
-        </div>
-      </form>
+  {/* PAN Card */}
+  <div className="mb-4">
+    <input
+      type="text"
+      name="pancard"
+      placeholder="Pan Card"
+      value={formData.pancard}
+      onChange={handleInputChange}
+      className="px-4 py-3 rounded-xl border border-[#870407] text-[#870407] bg-white w-full focus:outline-none focus:ring-2 focus:ring-[#870407] placeholder-gray-500"
+    />
+    {errors.pancard && <p className="text-red-500 text-sm mt-1">{errors.pancard}</p>}
+  </div>
+
+  {/* Submit Button */}
+  <div className="flex justify-center mb-6">
+    <button type="submit" className="px-6 py-3 bg-[#870407] text-white rounded-xl font-semibold w-full sm:w-60">
+      Donate {loggedInUser.isloggedIn ? "" : "Anonymously"}
+    </button>
+  </div>
+</form>
+
     </div>
   </div>
 

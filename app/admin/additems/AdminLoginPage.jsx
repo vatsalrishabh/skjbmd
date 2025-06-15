@@ -43,6 +43,9 @@ const AdminLoginPage = () => {
     { label: "प्रदेश सह प्रचारक", value: "pradeshsahpracharak" },
     { label: "प्रदेश मीडिया प्रभारी", value: "pradeshmediaprabhari" },
 
+      { label: "प्रदेश प्रभारी", value: "pradeshprabhari" }, // ✅ Added
+  { label: "मंडल प्रभारी", value: "mandalprabhari" },     // ✅ Added
+
     { label: "जिला प्रमुख", value: "jilapramukh" },
     { label: "सह जिला प्रमुख", value: "sahjilapramukh" },
     { label: "जिला संगठन मंत्री", value: "jilasangathanmantri" },
@@ -53,7 +56,9 @@ const AdminLoginPage = () => {
     { label: "जिला सह प्रचारक", value: "jilasahpracharak" },
     { label: "जिला मीडिया प्रभारी", value: "districtmediaprabhari" },
 
-    { label: "सदस्य", value: "member" },
+    
+
+    // { label: "सदस्य", value: "member" },
   ];
 
   const handleSnackBar = (message, status) => {

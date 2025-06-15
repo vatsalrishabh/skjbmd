@@ -32,6 +32,8 @@ const roles = [
   "rashtriyapracharak",
   "sahpracharak",
   "mediaprabhari",
+  
+  "pradeshprabhari",              // ✅ जोड़ा गया
   "pradeshpramukh",
   "pradeshsahpramukh",
   "pradeshsangathanmantri",
@@ -41,6 +43,11 @@ const roles = [
   "pradeshpracharak",
   "pradeshsahpracharak",
   "pradeshmediaprabhari",
+
+  "mandalprabhari",               // ✅ जोड़ा गया
+  "mandalpramukh",                // यदि हो
+  "mandalsangathanmantri",        // यदि हो
+
   "jilapramukh",
   "sahjilapramukh",
   "jilasangathanmantri",
@@ -50,8 +57,10 @@ const roles = [
   "jilapracharak",
   "jilasahpracharak",
   "districtmediaprabhari",
-  "member",
+
+  "member"
 ];
+
 
 const roleToPadName = {
   rashtriyapramukh: "राष्ट्रीय प्रमुख",
@@ -63,6 +72,8 @@ const roleToPadName = {
   rashtriyapracharak: "राष्ट्रीय प्रचारक",
   sahpracharak: "सह प्रचारक",
   mediaprabhari: "मीडिया प्रभारी",
+
+  pradeshprabhari: "प्रदेश प्रभारी",                 // ✅ जोड़ा गया
   pradeshpramukh: "प्रदेश प्रमुख",
   pradeshsahpramukh: "प्रदेश सह प्रमुख",
   pradeshsangathanmantri: "प्रदेश संगठन मंत्री",
@@ -72,6 +83,11 @@ const roleToPadName = {
   pradeshpracharak: "प्रदेश प्रचारक",
   pradeshsahpracharak: "प्रदेश सह प्रचारक",
   pradeshmediaprabhari: "प्रदेश मीडिया प्रभारी",
+
+  mandalprabhari: "मंडल प्रभारी",                     // ✅ जोड़ा गया
+  mandalpramukh: "मंडल प्रमुख",                       // ✅ जोड़ा गया
+  mandalsangathanmantri: "मंडल संगठन मंत्री",         // ✅ जोड़ा गया
+
   jilapramukh: "जिला प्रमुख",
   sahjilapramukh: "सह जिला प्रमुख",
   jilasangathanmantri: "जिला संगठन मंत्री",
@@ -81,8 +97,10 @@ const roleToPadName = {
   jilapracharak: "जिला प्रचारक",
   jilasahpracharak: "जिला सह प्रचारक",
   districtmediaprabhari: "जिला मीडिया प्रभारी",
-  member: "सदस्य",
+
+  member: "सदस्य"
 };
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;

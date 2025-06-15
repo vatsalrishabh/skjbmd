@@ -14,12 +14,15 @@ import {
   Typography,
   Slide,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import BlockIcon from "@mui/icons-material/Block";
 import PersonSearchIcon from "@mui/icons-material/PersonSearch";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import AdminBreadCrumbs from "@/app/components/Admin/AdminBreadCrumbs";
+import BadgeIcon from "@mui/icons-material/Badge"; // For ID Card
+import DescriptionIcon from "@mui/icons-material/Description"; // For Appointment Letter
 import axios from "axios";
 
 const roles = [
@@ -200,6 +203,23 @@ const RightGiveRank = () => {
   }
   };
 
+
+const router = useRouter();
+
+const handleIDCardIssue = (user) => {
+  if (!user) return;
+  const encodedData = encodeURIComponent(JSON.stringify(user));
+  window.open(`/idcard?data=${encodedData}`, "_blank");
+};
+
+const handleAppointmentLetterIssue = (user) => {
+  if (!user) return;
+  const encodedData = encodeURIComponent(JSON.stringify(user));
+  window.open(`/appletter?data=${encodedData}`, "_blank");
+};
+
+
+
   return (
     <div className="lg:w-[84%] w-full absolute right-0 min-h-screen bg-gray-100 p-6">
       <div className="py-7">
@@ -269,6 +289,23 @@ const RightGiveRank = () => {
                     >
                       पद से मुक्त करें
                     </Button>
+                   <Button
+    variant="outlined"
+    color="primary"
+    startIcon={<BadgeIcon />}
+    onClick={() => handleIDCardIssue(user)}
+  >
+    आईडी कार्ड जारी करें
+  </Button>
+
+  <Button
+    variant="outlined"
+    color="secondary"
+    startIcon={<DescriptionIcon />}
+    onClick={() => handleAppointmentLetterIssue(user)}
+  >
+    नियुक्ति पत्र जारी करें
+  </Button>
                   </td>
                 </tr>
               ))

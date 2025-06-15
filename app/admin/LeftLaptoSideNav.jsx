@@ -12,6 +12,7 @@ import CollectionsIcon from "@mui/icons-material/Collections"; // Gallery
 import WhatsAppIcon from "@mui/icons-material/WhatsApp"; // WhatsApp Linking
 import LogoutIcon from "@mui/icons-material/Logout"; // Logout
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import BadgeIcon from "@mui/icons-material/Badge"; // ID Card (new icon)
 
 const LeftLaptoSideNav = () => {
   const router = useRouter();
@@ -46,6 +47,11 @@ const LeftLaptoSideNav = () => {
       href: "/admin/whatsapp",
       label: "व्हाट्सएप लिंकिंग",
       icon: <WhatsAppIcon />,
+    },
+    {
+      href: "/admin/idCard",
+      label: "आईडी कार्ड",
+      icon: <BadgeIcon />,
     },
   ];
 

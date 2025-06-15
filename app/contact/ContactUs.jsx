@@ -208,6 +208,8 @@ const ContactUs = () => {
     // Call your API or logic here
   };
 
+  
+
   return (
     <div className="bg-[#ebd7a7] min-h-screen flex flex-col lg:flex-row items-center p-6 gap-6">
       {/* Form Section */}
@@ -419,13 +421,31 @@ const ContactUs = () => {
             </div>
           )}
 
-          <input
-            type="file"
-            name="profilePhoto"
-            accept="image/*"
-            className="p-3 border rounded-lg text-black placeholder-gray-700 bg-gray-100 w-full"
-            onChange={handleFileChange}
+        <div className="mb-4">
+      <label htmlFor="profilePhoto" className="block mb-2 text-sm font-medium text-black">
+        प्रोफ़ाइल फोटो <span className="text-red-500">*</span>
+      </label>
+      <input
+        type="file"
+        name="profilePhoto"
+        id="profilePhoto"
+        required
+        accept="image/*"
+        className="p-3 border rounded-lg text-black placeholder-gray-700 bg-gray-100 w-full"
+        onChange={handleFileChange}
+    
+      />
+      {formData?.profilePhoto && (
+        <div className="mt-3 w-24 h-24 relative border rounded overflow-hidden">
+          <Image
+            src={formData.profilePhoto ? URL.createObjectURL(formData.profilePhoto) : ""}
+            alt="Preview"
+            fill
+            className="object-cover rounded"
           />
+        </div>
+      )}
+    </div>
 
           {/* Submit */}
           <button

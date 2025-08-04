@@ -196,16 +196,53 @@ const ContactUs = () => {
       if (response.data) {
         setModalOpen(false); //otp modal close 
         setSnackMessage("मेम्बर सफलतापूर्वक पंजीकृत ");
-      setStatusCode(200);
-      setShowSnackBar(true);
+        setStatusCode(200);
+        setShowSnackBar(true);
+        return Promise.resolve(); // Indicate success
       }
     } catch (error) {
       console.error("Server error:", error);
-      setSnackMessage("रजिस्ट्रेशन विफल हुआ। कृपया पुनः प्रयास करें।");
-      setStatusCode( 500);
+      const errorMessage = error.response?.data?.message || "रजिस्ट्रेशन विफल हुआ। कृपया पुनः प्रयास करें।";
+      setSnackMessage(errorMessage);
+      setStatusCode(error.response?.status || 500);
       setShowSnackBar(true);
+      return Promise.reject(error); // Indicate failure
     }
-    // Call your API or logic here
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const data = new FormData();
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          data.append(key, value);
+        }
+      });
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BaseUrl}/api/auth/registerUser`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data) {
+        setSnackMessage("OTP पुनः भेजा गया है।");
+        setStatusCode(200);
+        setShowSnackBar(true);
+        return Promise.resolve();
+      }
+    } catch (error) {
+      console.error("Resend OTP error:", error);
+      const errorMessage = error.response?.data?.message || "OTP भेजने में समस्या हुई। कृपया पुनः प्रयास करें।";
+      setSnackMessage(errorMessage);
+      setStatusCode(error.response?.status || 500);
+      setShowSnackBar(true);
+      return Promise.reject(error);
+    }
   };
 
   
@@ -471,6 +508,7 @@ const ContactUs = () => {
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleOtpSubmit}
+        onResend={handleResendOtp}
       />
       {/* OTP Modal */}
 

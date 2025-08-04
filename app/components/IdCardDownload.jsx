@@ -120,7 +120,8 @@ const IdCardDownload = () => {
 
 const handleOtpSubmit = async () => {
   if (otp.length !== 6) {
-    return alert("6 अंकों का OTP दर्ज करें");
+    alert("6 अंकों का OTP दर्ज करें");
+    return;
   }
 
   try {
@@ -141,16 +142,17 @@ const handleOtpSubmit = async () => {
         router.push(`admin/appletter?data=${encodedData}`);
       }
     } else {
-      alert("गलत OTP");
+      alert("गलत OTP। कृपया सही OTP दर्ज करें।");
     }
 
   } catch (err) {
     if (err.response) {
       console.log(err.response.data);
-      alert("त्रुटि: " + err.response.data.message);
+      const errorMessage = err.response.data.message || "OTP सत्यापन में त्रुटि";
+      alert("त्रुटि: " + errorMessage);
     } else {
       console.log(err);
-      alert("सर्वर से संपर्क करने में समस्या हुई");
+      alert("सर्वर से संपर्क करने में समस्या हुई। कृपया पुनः प्रयास करें।");
     }
   }
 };
@@ -213,8 +215,8 @@ const handleOtpSubmit = async () => {
         {/* OTP Modal */}
         <Modal open={openModal} onClose={() => setOpenModal(false)}>
           <Box sx={modalStyle}>
-            <Typography variant="h6" gutterBottom>
-              OTP दर्ज करें
+            <Typography variant="h6" gutterBottom sx={{ color: "#8f1b1b", textAlign: "center" }}>
+              कृपया 6 अंको का OTP दर्ज करें
             </Typography>
             <TextField
               fullWidth
@@ -225,20 +227,55 @@ const handleOtpSubmit = async () => {
                 const val = e.target.value.replace(/\D/g, ""); // केवल अंक
                 if (val.length <= 6) setOtp(val);
               }}
+              onKeyPress={(e) => {
+                if (!/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab') {
+                  e.preventDefault();
+                }
+              }}
               inputProps={{
                 inputMode: "numeric",
                 pattern: "[0-9]{6}",
                 maxLength: 6,
+                style: { textAlign: "center", fontSize: "18px", letterSpacing: "2px" }
+              }}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
+                    borderColor: "#8f1b1b",
+                  },
+                  "&:hover fieldset": {
+                    borderColor: "#6e0303",
+                  },
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#8f1b1b",
+                  },
+                },
               }}
             />
+            <Typography variant="body2" sx={{ color: "gray", textAlign: "center", mt: 1 }}>
+              {otp.length}/6 अंक
+            </Typography>
             <Button
               variant="contained"
               fullWidth
               sx={{ mt: 2 }}
               onClick={handleOtpSubmit}
-              style={{ backgroundColor: "#8f1b1b", color: "white" }}
+              disabled={otp.length !== 6}
+              style={{ 
+                backgroundColor: otp.length === 6 ? "#8f1b1b" : "#ccc", 
+                color: "white" 
+              }}
             >
               सत्यापित करें
+            </Button>
+            <Button
+              variant="outlined"
+              fullWidth
+              sx={{ mt: 1 }}
+              onClick={() => setOpenModal(false)}
+              style={{ borderColor: "#8f1b1b", color: "#8f1b1b" }}
+            >
+              रद्द करें
             </Button>
           </Box>
         </Modal>

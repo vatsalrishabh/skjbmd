@@ -150,7 +150,7 @@ const handleOtpSubmit = async () => {
       alert("त्रुटि: " + err.response.data.message);
     } else {
       console.log(err);
-      alert("सर्वर से संपर्क करने में समस्या हुई");
+      alert("सर्वर से संपर्क करने में समस्या हुई|");
     }
   }
 };

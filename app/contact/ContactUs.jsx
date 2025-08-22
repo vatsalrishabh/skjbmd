@@ -169,7 +169,6 @@ const ContactUs = () => {
     }
     // console.log("Form Data Submitted:", formData);
   };
-
   const handleOtpSubmit = async (otp) => {
     console.log("OTP received:", otp);
     try {
@@ -180,33 +179,42 @@ const ContactUs = () => {
           data.append(key, value);
         }
       });
-
-      console.log(data);
-
+  
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BaseUrl}/api/auth/verifyOtp`,
         data,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
-      if (response.data) {
-        setModalOpen(false); //otp modal close 
-        setSnackMessage("मेम्बर सफलतापूर्वक पंजीकृत ");
-      setStatusCode(200);
-      setShowSnackBar(true);
+  
+      if (response.status === 201) {
+        setModalOpen(false); // close OTP modal
+        window.alert("✅ मेम्बर सफलतापूर्वक पंजीकृत");
       }
     } catch (error) {
       console.error("Server error:", error);
-      setSnackMessage("रजिस्ट्रेशन विफल हुआ। कृपया पुनः प्रयास करें।");
-      setStatusCode( 500);
-      setShowSnackBar(true);
+  
+      if (error.response) {
+        // Backend returned error
+        const { status, data } = error.response;
+  
+        if (status === 400) {
+          window.alert("❌ ओटीपी अमान्य है या समाप्त हो गया है।");
+        } else if (status === 409) {
+          window.alert("⚠️ यह ईमेल पहले से पंजीकृत है।");
+        } else if (status === 500) {
+          window.alert("⚠️ सर्वर में समस्या है। कृपया पुनः प्रयास करें।");
+        } else {
+          window.alert(data.message || "अज्ञात त्रुटि हुई।");
+        }
+      } else {
+        // No response (network error, timeout etc.)
+        window.alert("🌐 नेटवर्क त्रुटि। कृपया इंटरनेट कनेक्शन जांचें।");
+      }
     }
-    // Call your API or logic here
   };
+  
 
   
 

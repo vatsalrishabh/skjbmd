@@ -101,7 +101,7 @@ function Page() {
         {/* User photo */}
         <div className="absolute top-[43px] left-[15px] w-[80px] h-[100px] rounded-sm overflow-hidden bg-white border border-gray-400">
           <img
-            src={dpUrl ? `http://localhost:3001${dpUrl}` : '/assets/default-user.png'}
+        src={dpUrl ? `${process.env.NEXT_PUBLIC_BaseUrl}${dpUrl}` : '/assets/default-user.png'}
             alt="User"
             className="w-full h-full object-cover"
             crossOrigin="anonymous"

@@ -136,9 +136,9 @@ const handleOtpSubmit = async () => {
       const encodedData = encodeURIComponent(JSON.stringify(res.data.data));
 
       if (docType === "id-card") {
-        router.push(`admin/idcard?data=${encodedData}`);
+        router.push(`/idcard?data=${encodedData}`);
       } else {
-        router.push(`admin/appletter?data=${encodedData}`);
+        router.push(`/appletter?data=${encodedData}`);
       }
     } else {
       alert("गलत OTP");

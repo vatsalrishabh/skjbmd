@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import {
+  Avatar,
   Button,
   TextField,
   Dialog,
@@ -24,6 +25,7 @@ import AdminBreadCrumbs from "@/app/components/Admin/AdminBreadCrumbs";
 import BadgeIcon from "@mui/icons-material/Badge"; // For ID Card
 import DescriptionIcon from "@mui/icons-material/Description"; // For Appointment Letter
 import axios from "axios";
+import Image from "next/image";
 
 const roles = [
   "rashtriyapramukh",
@@ -262,6 +264,14 @@ const handleAppointmentLetterIssue = (user) => {
                   key={user.userId}
                   className="border-b text-gray-900 hover:bg-gray-50"
                 >
+                  <td className="px-4 py-3 font-semibold flex items-center gap-2">
+                    <Avatar
+                      src={user.dpUrl || "/default-avatar.png"} // fallback if dp not found
+                      alt={user.name}
+                      sx={{ width: 40, height: 40 }}
+                    />
+                    {user.name}
+                  </td>
                   <td className="px-4 py-3 font-semibold">{user.name}</td>
                   <td className="px-4 py-3">{user.contact}</td>
                   <td className="px-4 py-3">{user.padKaNaam || "सदस्य"}</td>
@@ -289,23 +299,22 @@ const handleAppointmentLetterIssue = (user) => {
                     >
                       पद से मुक्त करें
                     </Button>
-                   <Button
-    variant="outlined"
-    color="primary"
-    startIcon={<BadgeIcon />}
-    onClick={() => handleIDCardIssue(user)}
-  >
-    आईडी कार्ड जारी करें
-  </Button>
-
-  <Button
-    variant="outlined"
-    color="secondary"
-    startIcon={<DescriptionIcon />}
-    onClick={() => handleAppointmentLetterIssue(user)}
-  >
-    नियुक्ति पत्र जारी करें
-  </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      startIcon={<BadgeIcon />}
+                      onClick={() => handleIDCardIssue(user)}
+                    >
+                      आईडी कार्ड जारी करें
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      startIcon={<DescriptionIcon />}
+                      onClick={() => handleAppointmentLetterIssue(user)}
+                    >
+                      नियुक्ति पत्र जारी करें
+                    </Button>
                   </td>
                 </tr>
               ))

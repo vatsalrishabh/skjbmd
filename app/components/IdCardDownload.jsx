@@ -44,7 +44,7 @@ const IdCardDownload = () => {
         { mobile, docType }
       );
 
-      if (res.data.status === "requirePayment") {
+      if (res.data.status === "requirePayment") { // if backend sends this
         console.log(res.data)
         setAmount(res.data.amount);
         setPaymentRequired(true);

@@ -4,35 +4,373 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 
 const AppointmentLetterPDF = () => {
-  // Hardcoded sample data using useState
-  const [appointmentData] = useState({
-    employeeName: 'Rajesh Kumar',
-    position: 'Father Name',
-    department: 'Information Technology',
-    startDate: '2024-03-01',
-    salary: '85,000',
-    reportingManager: 'Priya Sharma',
-    companyName: 'SKJBMD Tech Solutions',
-    companyAddress: '123 Tech Park, Bangalore, Karnataka 560001',
-    hrName: 'Anita Verma',
-    hrTitle: 'HR Manager',
-    letterDate: '2024-02-15'
-  });
-
+  const [urlData, setUrlData] = useState(null); // 1. declare urlData state
+  const [appointmentData, setAppointmentData] = useState(null);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [debugInfo, setDebugInfo] = useState([]);
-
-  // Auto-load and generate PDF on component mount
-  useEffect(() => {
-    loadAndModifyPDF();
-  }, []);
+  const [debugInfo, setDebugInfo] = useState([]); // For logging debug info
+  const [formData, setFormData] = useState({
+    employeeName: '',
+    fatherName: '',
+    position: '',
+    userId: '',
+    aadharCard: '',
+    address: '',
+    positionDistrict: '',
+    positionState: ''
+  });
 
   const addDebugInfo = (message) => {
     console.log('PDF Debug:', message);
     setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
   };
+
+  // Handle form input changes
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Generate PDF with current form data
+  const generatePDFWithFormData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      setDebugInfo([]);
+      
+      addDebugInfo('Generating PDF with form data...');
+      
+      // Create appointment data from form data
+      const currentAppointmentData = {
+        ...appointmentData,
+        employeeName: formData.employeeName,
+        fatherName: formData.fatherName,
+        position: formData.position,
+        userId: formData.userId,
+        aadharCard: formData.aadharCard,
+        address: formData.address,
+        positionDistrict: formData.positionDistrict,
+        positionState: formData.positionState,
+
+      };
+      
+      addDebugInfo(`Using form data: ${JSON.stringify(currentAppointmentData, null, 2)}`);
+      
+      // Load the existing PDF template
+      const response = await fetch('/Your paragraph text.pdf');
+      if (!response.ok) {
+        throw new Error(`Failed to fetch PDF: ${response.status} ${response.statusText}`);
+      }
+      
+      const existingPdfBytes = await response.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+      // Helper function to ensure text is always a string
+      const safeText = (text, fallback = 'N/A') => {
+        if (text === null || text === undefined || text === '') {
+          return fallback;
+        }
+        return String(text).trim();
+      };
+
+      // Helper function to format address objects
+      const formatAddress = (addressObj, fallback = 'N/A') => {
+        if (!addressObj || typeof addressObj !== 'object') {
+          return safeText(addressObj, fallback);
+        }
+        
+        // Extract address components
+        const parts = [];
+        if (addressObj.street) parts.push(addressObj.street);
+        if (addressObj.city) parts.push(addressObj.city);
+        if (addressObj.state) parts.push(addressObj.state);
+        if (addressObj.zipCode) parts.push(addressObj.zipCode);
+        if (addressObj.country) parts.push(addressObj.country);
+        
+        return parts.length > 0 ? parts.join(', ') : fallback;
+      };
+      
+      addDebugInfo('Adding text overlays with form data...');
+      
+      // Employee Name
+      const employeeName = safeText(currentAppointmentData.employeeName, 'Unknown Name');
+      addDebugInfo(`Drawing employee name: "${employeeName}"`);
+      firstPage.drawText(employeeName, {
+        x: 870,
+        y: 1440,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // Father Name
+      const fatherName = safeText(currentAppointmentData.fatherName, 'Unknown Father');
+      const fatherText = `${fatherName}`;
+      addDebugInfo(`Drawing father name: "${fatherText}"`);
+      firstPage.drawText(fatherText, {
+        x: 870,
+        y: 1370,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // Position
+      const position = safeText(currentAppointmentData.position, 'Unknown Position');
+      addDebugInfo(`Drawing position: "${position}"`);
+      firstPage.drawText(position, {
+        x: 870,
+        y: 1130,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // User ID
+      const userId = safeText(currentAppointmentData.userId, 'N/A');
+      const userIdText = `USER ID: ${userId}`;
+      addDebugInfo(`Drawing user ID: "${userIdText}"`);
+      firstPage.drawText(userIdText, {
+        x: 30,
+        y: 2580,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // Today's Date
+      const currentDate = new Date();
+      const todaysDate = currentDate.toLocaleDateString('en-GB');
+      addDebugInfo(`Drawing today's date: "${todaysDate}"`);
+      firstPage.drawText(todaysDate, {
+        x: 830,
+        y: 640,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // Letter Date (one year from today)
+      const nextYearDate = new Date();
+      nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
+      const letterDate = nextYearDate.toLocaleDateString('en-GB');
+      addDebugInfo(`Drawing letter date: "${letterDate}"`);
+      firstPage.drawText(letterDate, {
+        x: 1200,
+        y: 640,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // Aadhar Card
+      const aadhar = safeText(currentAppointmentData.aadharCard, 'N/A');
+      const aadharText = `AADHAR: ${aadhar}`;
+      addDebugInfo(`Drawing aadhar: "${aadharText}"`);
+      firstPage.drawText(aadharText, {
+        x: 750,
+        y: 2580,
+        size: 44,
+        font: font,
+        color: rgb(0, 0, 0),
+      });
+      
+      // Address (if available)
+      const address = formatAddress(currentAppointmentData.address);
+      if (address && address !== 'N/A') {
+        addDebugInfo(`Drawing address: "${address}"`);
+        // Split long address into multiple lines if needed
+        const addressLines = address.length > 60 ? 
+          [address.substring(0, 60), address.substring(60)] :
+          [address];
+        
+        addressLines.forEach((line, index) => {
+          if (line && line.trim()) {
+            firstPage.drawText(line.trim(), {
+              x: 580,
+              y: 1260 - (index * 50), // Adjust y-coordinate for each line
+              size: 44,
+              font: font,
+              color: rgb(0, 0, 0),
+            });
+          }
+        });
+      }
+      
+      // Position District and State (on same line, separated by comma)
+      const positionDistrict = safeText(currentAppointmentData.positionDistrict, '');
+      const positionState = safeText(currentAppointmentData.positionState, '');
+      if (positionDistrict || positionState) {
+        const locationText = [positionDistrict, positionState].filter(Boolean).join(', ');
+        if (locationText) {
+          addDebugInfo(`Drawing position location: "${locationText}"`);
+          firstPage.drawText(locationText, {
+            x: 460,
+            y: 935, // Below address
+            size: 44,
+            font: font,
+            color: rgb(0, 0, 0),
+          });
+        }
+      }
+      
+      // Generate PDF blob URL for preview
+      addDebugInfo('Saving PDF document...');
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      
+      setPdfUrl(url);
+      addDebugInfo('PDF generated successfully with form data!');
+      
+    } catch (error) {
+      console.error('Error generating PDF with form data:', error);
+      setError(`Error generating PDF: ${error.message}`);
+      addDebugInfo(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Helper function to safely render any data, converting objects to strings
+  const safeRender = (value) => {
+    if (value === null || value === undefined) {
+      return 'N/A';
+    }
+    if (typeof value === 'object') {
+      // If it's an object, convert it to a readable string
+      if (value.street || value.city || value.state) {
+        // Handle address objects specifically
+        const parts = [];
+        if (value.street) parts.push(value.street);
+        if (value.city) parts.push(value.city);
+        if (value.state) parts.push(value.state);
+        if (value.zipCode) parts.push(value.zipCode);
+        if (value.country) parts.push(value.country);
+        return parts.join(', ') || 'N/A';
+      }
+      // For other objects, convert to JSON string
+      return JSON.stringify(value);
+    }
+    return String(value);
+  };
+
+  // Extract data from URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search); // 2. extract urlParams
+    const dataParam = urlParams.get('data'); // 3. extract dataParam
+    
+    if (dataParam) { // if dataParam exists
+      try {
+        const decodedData = JSON.parse(decodeURIComponent(dataParam)); // 4. parse dataParam- means convert stri
+        setUrlData(decodedData);
+        addDebugInfo(`URL data extracted from JSON: ${JSON.stringify(decodedData, null, 2)}`);
+      } catch (error) {
+        console.error('Error parsing URL data:', error);
+        addDebugInfo(`Error parsing URL data: ${error.message}`);
+      }
+    } else {
+      // Extract individual parameters
+      const extractedData = {
+        name: urlParams.get('name'),
+        fatherName: urlParams.get('fatherName'),
+        age: urlParams.get('age'),
+        contact: urlParams.get('contact'),
+        email: urlParams.get('email'),
+        role: urlParams.get('role'),
+        address: urlParams.get('address'),
+        aadharCard: urlParams.get('aadharCard'),
+        id: urlParams.get('id')
+      };
+      
+      // Check if any individual parameters exist
+      const hasIndividualParams = Object.values(extractedData).some(value => value !== null);
+      
+      if (hasIndividualParams) {
+        setUrlData(extractedData);
+        addDebugInfo(`URL data extracted from individual parameters: ${JSON.stringify(extractedData, null, 2)}`);
+      } else {
+        addDebugInfo('No URL data found, using default data');
+      }
+    }
+  }, []);
+
+  // Map URL data to appointment data format
+  const getAppointmentData = () => {
+    if (!urlData) {
+      // Fallback data if no URL data
+      return {
+        employeeName: 'Rajesh Kumar',
+        position: 'Member',
+        department: 'Information Technology',
+        startDate: '2024-03-01',
+        salary: '85,000',
+        reportingManager: 'Priya Sharma',
+        companyName: 'SKJBMD Tech Solutions',
+        companyAddress: '123 Tech Park, Bangalore, Karnataka 560001',
+        hrName: 'Anita Verma',
+        hrTitle: 'HR Manager',
+        letterDate: '2024-02-15',
+        // Additional fields required by UI
+        fatherName: 'Unknown Father',
+        age: 'N/A',
+        contact: 'N/A',
+        email: 'N/A',
+        userId: 'N/A',
+        aadharCard: 'N/A',
+        address: 'N/A'
+      };
+    }
+
+    // Map URL data to appointment letter fields
+    const currentDate = new Date().toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+
+    // Role mapping for position
+    const roleMapping = {
+      'rashtriyapramukh': 'Rashtriya Pramukh',
+      'pradeshpramukh': 'Pradesh Pramukh',
+      'zillapramukh': 'Zilla Pramukh',
+      'member': 'Member',
+      'volunteer': 'Volunteer'
+    };
+
+    return {
+      employeeName: urlData.name || 'N/A',
+      position: roleMapping[urlData.role] || urlData.role || 'Member',
+      department: 'Shri Krishna Janmabhoomi Mukti Dal',
+      startDate: currentDate,
+      salary: 'Voluntary Service',
+      reportingManager: 'Organization Head',
+      companyName: 'SKJBMD Tech Solutions',
+      companyAddress: '123 Tech Park, Bangalore, Karnataka 560001',
+      hrName: 'Administrative Department',
+      hrTitle: 'SKJMD Administration',
+      letterDate: currentDate,
+      // Additional fields from URL data
+      fatherName: urlData.fatherName || 'N/A',
+      age: urlData.age || 'N/A',
+      contact: urlData.contact || 'N/A',
+      email: urlData.email || 'N/A',
+      address: urlData.address || 'N/A',  // Fixed: address is a simple string, not an object
+      aadharCard: urlData.aadharCard || 'N/A',
+      userId: urlData.userId || urlData.id || 'N/A'  // Added fallback to 'id' field
+    };
+  };
+
+  // Auto-load and generate PDF on component mount and when urlData changes
+  useEffect(() => {
+    loadAndModifyPDF();
+  }, [urlData]); // Added urlData as dependency
 
   const loadAndModifyPDF = async () => {
     try {
@@ -41,6 +379,26 @@ const AppointmentLetterPDF = () => {
       setDebugInfo([]);
       
       addDebugInfo('Starting PDF loading process...');
+      
+      // Get the latest appointment data
+      const currentAppointmentData = getAppointmentData();
+      setAppointmentData(currentAppointmentData);
+      
+      // Update form data with current appointment data
+      setFormData({
+        employeeName: currentAppointmentData.employeeName || '',
+        fatherName: currentAppointmentData.fatherName || '',
+        position: currentAppointmentData.position || '',
+        userId: currentAppointmentData.userId || '',
+        aadharCard: currentAppointmentData.aadharCard || '',
+        address: typeof currentAppointmentData.address === 'object' 
+          ? `${currentAppointmentData.address.street || ''}, ${currentAppointmentData.address.city || ''}, ${currentAppointmentData.address.state || ''}, ${currentAppointmentData.address.zipCode || ''}, ${currentAppointmentData.address.country || ''}`.replace(/^,\s*|,\s*$/g, '').replace(/,\s*,/g, ',')
+          : currentAppointmentData.address || '',
+        positionDistrict: currentAppointmentData.positionDistrict || '',
+        positionState: currentAppointmentData.positionState || ''
+      });
+      
+      addDebugInfo(`Using appointment data: ${JSON.stringify(currentAppointmentData, null, 2)}`);
       
       // Load the existing PDF template
       addDebugInfo('Fetching PDF template from /Your paragraph text.pdf');
@@ -87,11 +445,40 @@ const AppointmentLetterPDF = () => {
         addDebugInfo('Helvetica fonts embedded successfully');
       }
       
-      // Add sample data to the PDF at specific positions
-      // You can adjust these coordinates based on your template layout
+      // Add URL data to the PDF at specific positions
+      // Coordinates are mapped to match the existing template layout
       
-      // Employee Name
-      firstPage.drawText(appointmentData.employeeName, {
+      // Helper function to ensure text is always a string
+      const safeText = (text, fallback = 'N/A') => {
+        if (text === null || text === undefined || text === '') {
+          return fallback;
+        }
+        return String(text).trim();
+      };
+
+      // Helper function to format address objects
+      const formatAddress = (addressObj, fallback = 'N/A') => {
+        if (!addressObj || typeof addressObj !== 'object') {
+          return safeText(addressObj, fallback);
+        }
+        
+        // Extract address components
+        const parts = [];
+        if (addressObj.street) parts.push(addressObj.street);
+        if (addressObj.city) parts.push(addressObj.city);
+        if (addressObj.state) parts.push(addressObj.state);
+        if (addressObj.zipCode) parts.push(addressObj.zipCode);
+        if (addressObj.country) parts.push(addressObj.country);
+        
+        return parts.length > 0 ? parts.join(', ') : fallback;
+      };
+      
+      addDebugInfo('Adding text overlays with null checks...');
+      
+      // Employee Name (Main name field)
+      const employeeName = safeText(currentAppointmentData.employeeName, 'Unknown Name');
+      addDebugInfo(`Drawing employee name: "${employeeName}"`);
+      firstPage.drawText(employeeName, {
         x: 870,
         y: 1440,
         size: 44,
@@ -99,8 +486,11 @@ const AppointmentLetterPDF = () => {
         color: rgb(0, 0, 0),
       });
       
-      // Position
-      firstPage.drawText(appointmentData.position, {
+      // Father Name (Position field repurposed)
+      const fatherName = safeText(currentAppointmentData.fatherName, 'Unknown Father');
+      const fatherText = ` ${fatherName}`;
+      addDebugInfo(`Drawing father name: "${fatherText}"`);
+      firstPage.drawText(fatherText, {
         x: 870,
         y: 1350,
         size: 44,
@@ -108,35 +498,36 @@ const AppointmentLetterPDF = () => {
         color: rgb(0, 0, 0),
       });
       
-      // Department
-      firstPage.drawText(appointmentData.department, {
-        x: 580,
-        y: 1260,
-        size: 44,
-        font: font,
-        color: rgb(0, 0, 0),
-      });
-      
-      // Start Date
-      firstPage.drawText(appointmentData.startDate, {
-        x: 1380,
+      // Role/Position (Department field repurposed)
+      const position = safeText(currentAppointmentData.position, 'Member');
+      addDebugInfo(`Drawing position: "${position}"`);
+      firstPage.drawText(position, {
+         x: 1380,
         y: 1010,
         size: 44,
         font: font,
         color: rgb(0, 0, 0),
       });
       
-      // Salary - using Rs. instead of ₹ to avoid encoding issues
-      firstPage.drawText(`Rs. ${appointmentData.salary}`, {
-        x: 480,
-        y: 930,
+
+      
+      // User ID (Salary field repurposed)
+      const userId = safeText(currentAppointmentData.userId, 'N/A');
+      const userIdText = `USER ID: ${userId}`;
+      addDebugInfo(`Drawing user ID: "${userIdText}"`);
+      firstPage.drawText(userIdText, {
+        x: 30,
+       y: 2580,
         size: 44,
         font: font,
         color: rgb(0, 0, 0),
       });
       
-      // Reporting Manager
-      firstPage.drawText(appointmentData.reportingManager, {
+      // Today's Date (replacing email field) - formatted as DD/MM/YYYY
+      const currentDate = new Date();
+      const todaysDate = currentDate.toLocaleDateString('en-GB');
+      addDebugInfo(`Drawing today's date: "${todaysDate}"`);
+      firstPage.drawText(todaysDate, {
         x: 830,
         y: 640,
         size: 44,
@@ -144,8 +535,12 @@ const AppointmentLetterPDF = () => {
         color: rgb(0, 0, 0),
       });
       
-      // Letter Date
-      firstPage.drawText(appointmentData.letterDate, {
+      // Letter Date (+1 year from current date) - formatted as DD/MM/YYYY
+      const nextYearDate = new Date();
+      nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
+      const letterDate = nextYearDate.toLocaleDateString('en-GB');
+      addDebugInfo(`Drawing letter date: "${letterDate}"`);
+      firstPage.drawText(letterDate, {
        x: 1200,
         y: 640,
         size: 44,
@@ -153,32 +548,59 @@ const AppointmentLetterPDF = () => {
         color: rgb(0, 0, 0),
       });
       
-      // HR Name
-      firstPage.drawText(appointmentData.hrName, {
-        x: 100,
-        y: 200,
-        size: 12,
-        font: font,
-        color: rgb(0, 0, 0),
-      });
+      // Additional fields at new coordinates
+      // Aadhar Card Number
+      const aadharCard = safeText(currentAppointmentData.aadharCard);
+      if (aadharCard && aadharCard !== 'N/A') {
+        const aadharText = `Aadhar: ${aadharCard}`;
+        addDebugInfo(`Drawing aadhar: "${aadharText}"`);
+        firstPage.drawText(aadharText, {
+          x: 750,
+          y: 2580,
+          size: 44,
+          font: font,
+          color: rgb(0, 0, 0),
+        });
+      }
       
-      // HR Title
-      firstPage.drawText(appointmentData.hrTitle, {
-        x: 100,
-        y: 180,
-        size: 10,
-        font: font,
-        color: rgb(0, 0, 0),
-      });
+      // Address (if available)
+      const address = formatAddress(currentAppointmentData.address);
+      if (address && address !== 'N/A') {
+        addDebugInfo(`Drawing address: "${address}"`);
+        // Split long address into multiple lines if needed
+        const addressLines = address.length > 60 ? 
+          [address.substring(0, 60), address.substring(60)] :
+          [address];
+        
+        addressLines.forEach((line, index) => {
+          if (line && line.trim()) {
+            firstPage.drawText(line.trim(), {
+              x: 580,
+              y: 1260 - (index * 50), // Adjust y-coordinate for each line
+              size: 44,
+              font: font,
+              color: rgb(0, 0, 0),
+            });
+          }
+        });
+      }
       
-      // Company Name
-      firstPage.drawText(appointmentData.companyName, {
-        x: 100,
-        y: 160,
-        size: 10,
-        font: font,
-        color: rgb(0, 0, 0),
-      });
+      // Position District and State (on same line, separated by comma)
+      const positionDistrict = safeText(currentAppointmentData.positionDistrict, '');
+      const positionState = safeText(currentAppointmentData.positionState, '');
+      if (positionDistrict || positionState) {
+        const locationText = [positionDistrict, positionState].filter(Boolean).join(', ');
+        if (locationText) {
+          addDebugInfo(`Drawing position location: "${locationText}"`);
+          firstPage.drawText(locationText, {
+            x: 580,
+            y: 1150, // Below address
+            size: 44,
+            font: font,
+            color: rgb(0, 0, 0),
+          });
+        }
+      }
       
       // Add sample data to the PDF at specific positions
       addDebugInfo('Adding text overlays to PDF...');
@@ -209,7 +631,7 @@ const AppointmentLetterPDF = () => {
     if (pdfUrl) {
       const response = await fetch(pdfUrl);
       const blob = await response.blob();
-      saveAs(blob, `appointment-letter-${appointmentData.employeeName.replace(' ', '-')}.pdf`);
+      saveAs(blob, `appointment-letter-${currentAppointmentData.employeeName.replace(' ', '-')}.pdf`);
     }
   };
 
@@ -298,73 +720,138 @@ const AppointmentLetterPDF = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Data Display */}
+            {/* Editable Form */}
             <div className="bg-white rounded-lg shadow-md p-6">
               <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                Current Data Mapping
+                Edit Data for PDF
               </h2>
               
-              <div className="space-y-3">
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Employee Name:</span>
-                  <span className="text-blue-600">{appointmentData.employeeName}</span>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Name:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.employeeName}
+                    onChange={(e) => handleInputChange('employeeName', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter employee name"
+                  />
                 </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Position:</span>
-                  <span className="text-blue-600">{appointmentData.position}</span>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Father Name:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.fatherName}
+                    onChange={(e) => handleInputChange('fatherName', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter father name"
+                  />
                 </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Department:</span>
-                  <span className="text-blue-600">{appointmentData.department}</span>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Position/Role:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.position}
+                    onChange={(e) => handleInputChange('position', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter position"
+                  />
                 </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Start Date:</span>
-                  <span className="text-blue-600">{appointmentData.startDate}</span>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    User ID:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.userId}
+                    onChange={(e) => handleInputChange('userId', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter user ID"
+                  />
                 </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Salary:</span>
-                  <span className="text-blue-600">Rs. {appointmentData.salary}</span>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Aadhar Card:
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.aadharCard}
+                    onChange={(e) => handleInputChange('aadharCard', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter Aadhar card number"
+                  />
                 </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Reporting Manager:</span>
-                  <span className="text-blue-600">{appointmentData.reportingManager}</span>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Address:
+                  </label>
+                  <textarea
+                    value={formData.address}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter complete address"
+                    rows="3"
+                  />
                 </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Letter Date:</span>
-                  <span className="text-blue-600">{appointmentData.letterDate}</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">HR Name:</span>
-                  <span className="text-blue-600">{appointmentData.hrName}</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">HR Title:</span>
-                  <span className="text-blue-600">{appointmentData.hrTitle}</span>
-                </div>
-                <div className="flex justify-between border-b pb-2">
-                  <span className="font-medium">Company:</span>
-                  <span className="text-blue-600">{appointmentData.companyName}</span>
-                </div>
+                
+                <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                     Position District:
+                   </label>
+                   <input
+                     type="text"
+                     value={formData.positionDistrict}
+                     onChange={(e) => handleInputChange('positionDistrict', e.target.value)}
+                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     placeholder="Enter position district"
+                   />
+                 </div>
+                 
+                 <div>
+                   <label className="block text-sm font-medium text-gray-700 mb-1">
+                     Position State:
+                   </label>
+                   <input
+                     type="text"
+                     value={formData.positionState}
+                     onChange={(e) => handleInputChange('positionState', e.target.value)}
+                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                     placeholder="Enter position state"
+                   />
+                 </div>
               </div>
 
               <div className="mt-6 text-center space-y-3">
                 <button
-                  onClick={downloadPDF}
+                  onClick={generatePDFWithFormData}
                   className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-md block w-full"
+                  disabled={isLoading}
                 >
-                  Download PDF
+                  {isLoading ? 'Generating...' : 'Generate PDF with Form Data'}
                 </button>
                 <button
-                  onClick={testPDFFile}
+                  onClick={downloadPDF}
                   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md block w-full"
+                  disabled={!pdfUrl}
                 >
-                  Test Original PDF
+                  Download PDF
                 </button>
                 <button
                   onClick={loadAndModifyPDF}
                   className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md block w-full"
                 >
-                  Reload PDF
+                  Reset to Original Data
                 </button>
               </div>
             </div>

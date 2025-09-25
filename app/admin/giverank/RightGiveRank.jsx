@@ -217,7 +217,7 @@ const handleIDCardIssue = (user) => {
 const handleAppointmentLetterIssue = (user) => {
   if (!user) return;
   const encodedData = encodeURIComponent(JSON.stringify(user));
-  window.open(`/appletter?data=${encodedData}`, "_blank");
+  window.open(`/appletterpdf?data=${encodedData}`, "_blank");
 };
 
 

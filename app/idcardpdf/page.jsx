@@ -30,7 +30,7 @@ const IdCardPDF = () => {
     setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${info}`]);
   };
 
-  // Parse URL parameters on component mount
+  // Parse URL parameters on component mount and auto-generate PDF
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const dataParam = urlParams.get('data');
@@ -38,7 +38,7 @@ const IdCardPDF = () => {
     if (dataParam) {
       try {
         const parsedData = JSON.parse(decodeURIComponent(dataParam));
-        setFormData({
+        const newFormData = {
           userId: parsedData.userId || '',
           name: parsedData.name || '',
           fatherName: parsedData.fatherName || '',
@@ -53,9 +53,17 @@ const IdCardPDF = () => {
           zipCode: parsedData.address?.zipCode || '',
           country: parsedData.address?.country || '',
           aadharCard: parsedData.aadharCard || '',
-          pancard: parsedData.pancard || ''
-        });
+          pancard: parsedData.pancard || '',
+          dpUrl: parsedData.dpUrl || ''
+        };
+        setFormData(newFormData);
         addDebugInfo('URL data parsed and loaded into form');
+        
+        // Auto-generate PDF after a short delay to ensure state is updated
+        setTimeout(() => {
+          addDebugInfo('Auto-generating PDF...');
+          loadAndModifyPDFWithData(newFormData);
+        }, 100);
       } catch (error) {
         console.error('Error parsing URL data:', error);
         addDebugInfo(`Error parsing URL data: ${error.message}`);
@@ -77,17 +85,23 @@ const IdCardPDF = () => {
     return String(text);
   };
 
-  const formatAddress = (street, city, state, zipCode, country) => {
+  const formatAddress = (addressObj) => {
+    if (!addressObj || typeof addressObj !== 'object') {
+      return 'N/A';
+    }
+    
+    const { street, city, state, zipCode, country } = addressObj;
     const addressParts = [street, city, state, zipCode, country].filter(part => 
       part && part.trim() && part.trim() !== 'N/A'
     );
     return addressParts.length > 0 ? addressParts.join(', ') : 'N/A';
   };
 
-  const loadAndModifyPDF = async () => {
+  const loadAndModifyPDFWithData = async (dataToUse = null) => {
+    const currentFormData = dataToUse || formData;
     setIsLoading(true);
     setError(null);
-    setDebugInfo([]);
+    if (!dataToUse) setDebugInfo([]);
     
     try {
       addDebugInfo('Starting PDF loading process...');
@@ -114,11 +128,45 @@ const IdCardPDF = () => {
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
       addDebugInfo('Font embedded successfully');
       
+      // Load and embed profile picture
+      let profileImage = null;
+      const dpUrl = currentFormData.dpUrl;
+      if (dpUrl) {
+        try {
+          addDebugInfo(`Loading profile picture from: ${dpUrl}`);
+          
+          // Construct full URL for the image
+          const imageUrl = dpUrl.startsWith('http') ? dpUrl : `http://localhost:3000${dpUrl}`;
+          addDebugInfo(`Full image URL: ${imageUrl}`);
+          
+          const imageResponse = await fetch(imageUrl);
+          if (imageResponse.ok) {
+            const imageBytes = await imageResponse.arrayBuffer();
+            addDebugInfo(`Image loaded: ${imageBytes.byteLength} bytes`);
+            
+            // Determine image type and embed accordingly
+            if (dpUrl.toLowerCase().includes('.png')) {
+              profileImage = await pdfDoc.embedPng(imageBytes);
+              addDebugInfo('PNG image embedded successfully');
+            } else {
+              profileImage = await pdfDoc.embedJpg(imageBytes);
+              addDebugInfo('JPG image embedded successfully');
+            }
+          } else {
+            addDebugInfo(`Failed to load image: ${imageResponse.status} ${imageResponse.statusText}`);
+          }
+        } catch (error) {
+          addDebugInfo(`Error loading profile picture: ${error.message}`);
+        }
+      } else {
+        addDebugInfo('No profile picture URL provided');
+      }
+      
       // Add text overlays to the PDF at specific positions
       addDebugInfo('Adding text overlays to PDF...');
       
       // User ID
-      const userId = safeText(formData.userId, '');
+      const userId = safeText(currentFormData.userId, '');
       if (userId && userId !== 'N/A') {
         addDebugInfo(`Drawing User ID: "${userId}"`);
         firstPage.drawText(` ${userId}`, {
@@ -131,7 +179,7 @@ const IdCardPDF = () => {
       }
       
       // Name
-      const name = safeText(formData.name, '');
+      const name = safeText(currentFormData.name, '');
       if (name && name !== 'N/A') {
         addDebugInfo(`Drawing Name: "${name}"`);
         firstPage.drawText(`${name}`, {
@@ -142,22 +190,10 @@ const IdCardPDF = () => {
           color: rgb(0, 0, 0),
         });
       }
-      
-      // Father Name
-    //   const fatherName = safeText(formData.fatherName, '');
-    //   if (fatherName && fatherName !== 'N/A') {
-    //     addDebugInfo(`Drawing Father Name: "${fatherName}"`);
-    //     firstPage.drawText(`Father: ${fatherName}`, {
-    //      x: 126,
-    //       y: 320,
-    //       size: 8,
-    //       font: font,
-    //       color: rgb(0, 0, 0),
-    //     });
-    //   }
+    
       
       // Age
-      const age = safeText(formData.age, '');
+      const age = safeText(currentFormData.age, '');
       if (age && age !== 'N/A') {
         addDebugInfo(`Drawing Age: "${age}"`);
         firstPage.drawText(`Age: ${age}`, {
@@ -170,7 +206,7 @@ const IdCardPDF = () => {
       }
       
       // Contact
-      const contact = safeText(formData.contact, '');
+      const contact = safeText(currentFormData.contact, '');
       if (contact && contact !== 'N/A') {
         addDebugInfo(`Drawing Contact: "${contact}"`);
         firstPage.drawText(`Contact: ${contact}`, {
@@ -182,21 +218,11 @@ const IdCardPDF = () => {
         });
       }
       
-      // Email
-      const email = safeText(formData.email, '');
-      if (email && email !== 'N/A') {
-        addDebugInfo(`Drawing Email: "${email}"`);
-        firstPage.drawText(`Email: ${email}`, {
-          x: 100,
-          y: 200,
-          size: 44,
-          font: font,
-          color: rgb(0, 0, 0),
-        });
-      }
+  
+    
       
       // Role
-      const role = safeText(formData.role, '');
+      const role = safeText(currentFormData.role, '');
       if (role && role !== 'N/A') {
         addDebugInfo(`Drawing Role: "${role}"`);
         firstPage.drawText(` ${role}`, {
@@ -204,12 +230,12 @@ const IdCardPDF = () => {
           y: 110,
           size: 8,
           font: font,
-          color: rgb(0, 0, 0),
+          color: rgb(0.6, 0.1, 0.1), // dark red/maroon color
         });
       }
       
       // Gender
-      const gender = safeText(formData.gender, '');
+      const gender = safeText(currentFormData.gender, '');
       if (gender && gender !== 'N/A') {
         addDebugInfo(`Drawing Gender: "${gender}"`);
         firstPage.drawText(` ${gender}`, {
@@ -222,7 +248,7 @@ const IdCardPDF = () => {
       }
 
       // Mobile Number (using contact field)
-      const mobile = safeText(formData.contact, '');
+      const mobile = safeText(currentFormData.contact, '');
       if (mobile && mobile !== 'N/A') {
         addDebugInfo(`Drawing Mobile: "${mobile}"`);
         firstPage.drawText(` ${mobile}`, {
@@ -235,46 +261,49 @@ const IdCardPDF = () => {
       }
 
       // District
-      const district = safeText(formData.address?.city, '');
+      const district = safeText(currentFormData.city, '');
+      addDebugInfo(`District data: "${district}" from currentFormData.city: "${currentFormData.city}"`);
       if (district && district !== 'N/A') {
         addDebugInfo(`Drawing District: "${district}"`);
-        firstPage.drawText(` ${district}`, {
-          x: 126,
-          y: 80,
-          size: 8,
+        firstPage.drawText(`District: ${district}`, {
+          x: 50,
+          y: 650,
+          size: 12,
           font: font,
-          color: rgb(0, 0, 0),
+          color: rgb(0.6, 0.1, 0.1),
         });
       }
 
       // State
-      const state = safeText(formData.address?.state, '');
+      const state = safeText(currentFormData.state, '');
+      addDebugInfo(`State data: "${state}" from currentFormData.state: "${currentFormData.state}"`);
       if (state && state !== 'N/A') {
         addDebugInfo(`Drawing State: "${state}"`);
-        firstPage.drawText(` ${state}`, {
-         x: 126,
-          y: 70,
-          size: 8,
+        firstPage.drawText(`State: ${state}`, {
+          x: 50,
+          y: 630,
+          size: 12,
           font: font,
-          color: rgb(0, 0, 0),
+          color: rgb(0.6, 0.1, 0.1),
         });
       }
 
       // Full Address
-      const fullAddress = formatAddress(formData.address);
-      if (fullAddress && fullAddress !== 'N/A') {
+      const fullAddress = `${currentFormData.street || ''}, ${currentFormData.city || ''}, ${currentFormData.state || ''} ${currentFormData.zipCode || ''}`.replace(/^,\s*|,\s*$|,\s*,/g, '').trim();
+      addDebugInfo(`Full Address data: "${fullAddress}"`);
+      if (fullAddress && fullAddress !== 'N/A' && fullAddress !== '') {
         addDebugInfo(`Drawing Full Address: "${fullAddress}"`);
-        firstPage.drawText(` ${fullAddress}`, {
-         x: 126,
-          y: 60,
-          size: 8,
+        firstPage.drawText(`Address: ${fullAddress}`, {
+          x: 50,
+          y: 610,
+          size: 10,
           font: font,
-          color: rgb(0, 0, 0),
+          color: rgb(0.6, 0.1, 0.1),
         });
       }
       
       // Aadhar Card
-      const aadharCard = safeText(formData.aadharCard, '');
+      const aadharCard = safeText(currentFormData.aadharCard, '');
       if (aadharCard && aadharCard !== 'N/A') {
         addDebugInfo(`Drawing Aadhar Card: "${aadharCard}"`);
         firstPage.drawText(`Aadhar: ${aadharCard}`, {
@@ -287,7 +316,7 @@ const IdCardPDF = () => {
       }
       
       // PAN Card
-      const pancard = safeText(formData.pancard, '');
+      const pancard = safeText(currentFormData.pancard, '');
       if (pancard && pancard !== 'N/A') {
         addDebugInfo(`Drawing PAN Card: "${pancard}"`);
         firstPage.drawText(`PAN: ${pancard}`, {
@@ -297,6 +326,34 @@ const IdCardPDF = () => {
           font: font,
           color: rgb(0, 0, 0),
         });
+      }
+      
+      // Draw profile picture if available
+      if (profileImage) {
+        try {
+          addDebugInfo('Drawing profile picture on PDF...');
+          
+          // Calculate image dimensions (maintaining aspect ratio)
+          const imageWidth = 140;  // Desired width (increased)
+          const imageHeight = 170; // Desired height (increased)
+          
+          // Position the image on the right side of the ID card
+          const imageX = 400; // X position (right side, moved left)
+          const imageY = 600; // Y position (middle area, adjusted for PDF coordinates)
+          
+          firstPage.drawImage(profileImage, {
+            x: imageX,
+            y: imageY,
+            width: imageWidth,
+            height: imageHeight,
+          });
+          
+          addDebugInfo(`Profile picture drawn at position (${imageX}, ${imageY}) with size ${imageWidth}x${imageHeight}`);
+        } catch (error) {
+          addDebugInfo(`Error drawing profile picture: ${error.message}`);
+        }
+      } else {
+        addDebugInfo('No profile image to draw');
       }
       
       // Generate PDF blob URL for preview
@@ -315,6 +372,10 @@ const IdCardPDF = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const loadAndModifyPDF = async () => {
+    return loadAndModifyPDFWithData();
   };
 
   const downloadPDF = () => {

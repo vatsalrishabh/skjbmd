@@ -213,22 +213,61 @@ const IdCardPDF = () => {
       if (gender && gender !== 'N/A') {
         addDebugInfo(`Drawing Gender: "${gender}"`);
         firstPage.drawText(` ${gender}`, {
-          x: 126,
+           x: 126,
           y: 100,
           size: 8,
           font: font,
           color: rgb(0, 0, 0),
         });
       }
-      
-      // Address
-      const address = formatAddress(formData.address);
-      if (address && address !== 'N/A') {
-        addDebugInfo(`Drawing Address: "${address}"`);
-        firstPage.drawText(`Address: ${address}`, {
-          x: 400,
-          y: 600,
-          size: 44,
+
+      // Mobile Number (using contact field)
+      const mobile = safeText(formData.contact, '');
+      if (mobile && mobile !== 'N/A') {
+        addDebugInfo(`Drawing Mobile: "${mobile}"`);
+        firstPage.drawText(` ${mobile}`, {
+           x: 126,
+          y: 90,
+          size: 8,
+          font: font,
+          color: rgb(0, 0, 0),
+        });
+      }
+
+      // District
+      const district = safeText(formData.address?.city, '');
+      if (district && district !== 'N/A') {
+        addDebugInfo(`Drawing District: "${district}"`);
+        firstPage.drawText(` ${district}`, {
+          x: 126,
+          y: 80,
+          size: 8,
+          font: font,
+          color: rgb(0, 0, 0),
+        });
+      }
+
+      // State
+      const state = safeText(formData.address?.state, '');
+      if (state && state !== 'N/A') {
+        addDebugInfo(`Drawing State: "${state}"`);
+        firstPage.drawText(` ${state}`, {
+         x: 126,
+          y: 70,
+          size: 8,
+          font: font,
+          color: rgb(0, 0, 0),
+        });
+      }
+
+      // Full Address
+      const fullAddress = formatAddress(formData.address);
+      if (fullAddress && fullAddress !== 'N/A') {
+        addDebugInfo(`Drawing Full Address: "${fullAddress}"`);
+        firstPage.drawText(` ${fullAddress}`, {
+         x: 126,
+          y: 60,
+          size: 8,
           font: font,
           color: rgb(0, 0, 0),
         });
@@ -240,7 +279,7 @@ const IdCardPDF = () => {
         addDebugInfo(`Drawing Aadhar Card: "${aadharCard}"`);
         firstPage.drawText(`Aadhar: ${aadharCard}`, {
           x: 400,
-          y: 500,
+          y: 450,
           size: 44,
           font: font,
           color: rgb(0, 0, 0),

@@ -156,7 +156,7 @@ const AppointmentLetterPDF = () => {
         color: rgb(0, 0, 0),
       });
       
-      // Letter Date (one year from today)
+      // Letter Date (one year from today.  
       const nextYearDate = new Date();
       nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
       const letterDate = nextYearDate.toLocaleDateString('en-GB');
@@ -721,161 +721,179 @@ const AppointmentLetterPDF = () => {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Editable Form */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                Edit Data for PDF
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-lg p-8 border border-blue-200">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center border-b border-blue-300 pb-3">
+                📝 Edit Data for PDF
               </h2>
               
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Name:
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    👤 Employee Name:
                   </label>
                   <input
                     type="text"
                     value={formData.employeeName}
                     onChange={(e) => handleInputChange('employeeName', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
                     placeholder="Enter employee name"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Father Name:
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    👨‍👦 Father Name:
                   </label>
                   <input
                     type="text"
                     value={formData.fatherName}
                     onChange={(e) => handleInputChange('fatherName', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
                     placeholder="Enter father name"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Position/Role:
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    💼 Position/Role:
                   </label>
                   <input
                     type="text"
                     value={formData.position}
                     onChange={(e) => handleInputChange('position', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
                     placeholder="Enter position"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    User ID:
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    🆔 User ID:
                   </label>
                   <input
                     type="text"
                     value={formData.userId}
                     onChange={(e) => handleInputChange('userId', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
                     placeholder="Enter user ID"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Aadhar Card:
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    📄 Aadhar Card:
                   </label>
                   <input
                     type="text"
                     value={formData.aadharCard}
                     onChange={(e) => handleInputChange('aadharCard', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
                     placeholder="Enter Aadhar card number"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Address:
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    🏠 Address:
                   </label>
                   <textarea
                     value={formData.address}
                     onChange={(e) => handleInputChange('address', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md resize-none"
                     placeholder="Enter complete address"
                     rows="3"
                   />
                 </div>
                 
-                <div>
-                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                     Position District:
-                   </label>
-                   <input
-                     type="text"
-                     value={formData.positionDistrict}
-                     onChange={(e) => handleInputChange('positionDistrict', e.target.value)}
-                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                     placeholder="Enter position district"
-                   />
-                 </div>
-                 
-                 <div>
-                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                     Position State:
-                   </label>
-                   <input
-                     type="text"
-                     value={formData.positionState}
-                     onChange={(e) => handleInputChange('positionState', e.target.value)}
-                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                     placeholder="Enter position state"
-                   />
-                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">
+                      🏘️ Position District:
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.positionDistrict}
+                      onChange={(e) => handleInputChange('positionDistrict', e.target.value)}
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
+                      placeholder="Enter position district"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-800 mb-2">
+                      🗺️ Position State:
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.positionState}
+                      onChange={(e) => handleInputChange('positionState', e.target.value)}
+                      className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-blue-400 focus:border-blue-500 transition-all duration-200 text-gray-800 placeholder-gray-500 shadow-sm hover:shadow-md"
+                      placeholder="Enter position state"
+                    />
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-6 text-center space-y-3">
+              <div className="mt-8 space-y-4">
                 <button
                   onClick={generatePDFWithFormData}
-                  className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 shadow-md block w-full"
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Generating...' : 'Generate PDF with Form Data'}
+                  {isLoading ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Generating...
+                    </span>
+                  ) : (
+                    '🚀 Generate PDF with Form Data'
+                  )}
                 </button>
                 <button
                   onClick={downloadPDF}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md block w-full"
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   disabled={!pdfUrl}
                 >
-                  Download PDF
+                  📥 Download PDF
                 </button>
                 <button
                   onClick={loadAndModifyPDF}
-                  className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 shadow-md block w-full"
+                  className="w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                 >
-                  Reset to Original Data
+                  🔄 Reset to Original Data
                 </button>
               </div>
             </div>
 
             {/* PDF Preview */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">
-                PDF Preview
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-lg p-8 border border-gray-200">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center border-b border-gray-300 pb-3">
+                📄 PDF Preview
               </h2>
               
               {pdfUrl ? (
                 <iframe
                   src={pdfUrl}
-                  className="w-full h-96 border border-gray-300 rounded-md"
+                  className="w-full h-96 border-2 border-gray-300 rounded-xl shadow-inner bg-white"
                   title="PDF Preview"
                 />
               ) : (
-                <div className="w-full h-96 border border-gray-300 rounded-md flex items-center justify-center bg-gray-50">
-                  <span className="text-gray-500">PDF preview not available</span>
+                <div className="w-full h-96 border-2 border-dashed border-gray-400 rounded-xl flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+                  <div className="text-center">
+                    <div className="text-6xl mb-4">📄</div>
+                    <span className="text-gray-600 font-medium">PDF preview will appear here</span>
+                    <p className="text-gray-500 text-sm mt-2">Generate a PDF to see the preview</p>
+                  </div>
                 </div>
               )}
               
-              <div className="mt-4 text-sm text-gray-600">
-                <p><strong>Note:</strong> The data is automatically mapped to the template. You can see how the sample data appears in the PDF above.</p>
+              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  <strong>💡 Note:</strong> The data is automatically mapped to the template. You can see how your form data appears in the PDF above.
+                </p>
               </div>
             </div>
           </div>

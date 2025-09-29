@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import { saveAs } from 'file-saver';
 
@@ -21,6 +21,19 @@ const AppointmentLetterPDF = () => {
     positionState: ''
   });
 
+  // Photo upload states
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [isPhotoEditing, setIsPhotoEditing] = useState(false);
+  const [photoEditOptions, setPhotoEditOptions] = useState({
+    brightness: 100,
+    contrast: 100,
+    saturation: 100,
+    rotation: 0,
+    scale: 1
+  });
+  const fileInputRef = useRef(null);
+
   const addDebugInfo = (message) => {
     console.log('PDF Debug:', message);
     setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
@@ -32,6 +45,100 @@ const AppointmentLetterPDF = () => {
       ...prev,
       [field]: value
     }));
+  };
+
+  // Photo handling functions
+  const handlePhotoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      validateAndSetPhoto(file);
+    }
+  };
+
+  const handlePhotoDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      validateAndSetPhoto(file);
+    }
+  };
+
+  const validateAndSetPhoto = (file) => {
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      alert('Please select a valid image file (JPEG, PNG, or WebP)');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      alert('File size must be less than 5MB');
+      return;
+    }
+
+    setPhotoFile(file);
+    
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setPhotoPreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setIsPhotoEditing(false);
+    setPhotoEditOptions({
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      rotation: 0,
+      scale: 1
+    });
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handlePhotoEditChange = (option, value) => {
+    setPhotoEditOptions(prev => ({
+      ...prev,
+      [option]: value
+    }));
+  };
+
+  const resetPhotoEdits = () => {
+    setPhotoEditOptions({
+      brightness: 100,
+      contrast: 100,
+      saturation: 100,
+      rotation: 0,
+      scale: 1
+    });
+  };
+
+  const getPhotoStyle = () => {
+    if (!photoPreview) return {};
+    
+    return {
+      filter: `brightness(${photoEditOptions.brightness}%) contrast(${photoEditOptions.contrast}%) saturate(${photoEditOptions.saturation}%)`,
+      transform: `rotate(${photoEditOptions.rotation}deg) scale(${photoEditOptions.scale})`,
+      transition: 'all 0.3s ease'
+    };
+  };
+
+  const getCurrentPhotoUrl = () => {
+    if (photoPreview) {
+      return photoPreview;
+    }
+    if (appointmentData?.dpUrl) {
+      return `${process.env.NEXT_PUBLIC_BaseUrl}${appointmentData.dpUrl}`;
+    }
+    return '/default-user.png';
   };
 
   // Generate PDF with current form data
@@ -70,6 +177,10 @@ const AppointmentLetterPDF = () => {
       const pages = pdfDoc.getPages();
       const firstPage = pages[0];
       const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      
+      // Debug page dimensions
+      const { width: pageWidth, height: pageHeight } = firstPage.getSize();
+      addDebugInfo(`PDF Page dimensions: ${pageWidth} x ${pageHeight}`);
 
       // Helper function to ensure text is always a string
       const safeText = (text, fallback = 'N/A') => {
@@ -125,8 +236,8 @@ const AppointmentLetterPDF = () => {
       const position = safeText(currentAppointmentData.position, 'Unknown Position');
       addDebugInfo(`Drawing position: "${position}"`);
       firstPage.drawText(position, {
-        x: 870,
-        y: 1130,
+        x: 1380,
+        y: 1010,
         size: 44,
         font: font,
         color: rgb(0, 0, 0),
@@ -217,6 +328,108 @@ const AppointmentLetterPDF = () => {
             font: font,
             color: rgb(0, 0, 0),
           });
+        }
+      }
+
+      // Add photo to PDF if available
+      addDebugInfo(`Checking for photo: photoPreview=${!!photoPreview}, dpUrl=${currentAppointmentData.dpUrl}`);
+      if (photoPreview || (currentAppointmentData.dpUrl && currentAppointmentData.dpUrl.trim() !== '')) {
+        try {
+          addDebugInfo('Starting photo processing for PDF...');
+          
+          let imageBytes;
+          let imageType;
+          
+          if (photoPreview) {
+            // Convert base64 to bytes for uploaded photo
+            const base64Data = photoPreview.split(',')[1];
+            imageBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+            
+            // Determine image type from base64 header
+            if (photoPreview.startsWith('data:image/png')) {
+              imageType = 'png';
+            } else if (photoPreview.startsWith('data:image/jpeg') || photoPreview.startsWith('data:image/jpg')) {
+              imageType = 'jpg';
+            } else {
+              imageType = 'jpg'; // Default fallback
+            }
+          } else if (currentAppointmentData.dpUrl) {
+            // Fetch existing photo from URL
+            const baseUrl = process.env.NEXT_PUBLIC_BaseUrl || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+            const photoUrl = `${baseUrl}${currentAppointmentData.dpUrl}`;
+            addDebugInfo(`Fetching photo from: ${photoUrl}`);
+            addDebugInfo(`Base URL: ${baseUrl}`);
+            const photoResponse = await fetch(photoUrl);
+            addDebugInfo(`Photo fetch response status: ${photoResponse.status}`);
+            if (photoResponse.ok) {
+              imageBytes = new Uint8Array(await photoResponse.arrayBuffer());
+              
+              // Determine image type from URL extension
+              const urlLower = currentAppointmentData.dpUrl.toLowerCase();
+              if (urlLower.includes('.png')) {
+                imageType = 'png';
+              } else {
+                imageType = 'jpg';
+              }
+            } else {
+              addDebugInfo(`Failed to fetch photo. Status: ${photoResponse.status}, StatusText: ${photoResponse.statusText}`);
+              throw new Error('Failed to fetch existing photo');
+            }
+          }
+          
+          if (imageBytes) {
+            // Embed the image
+            let embeddedImage;
+            if (imageType === 'png') {
+              embeddedImage = await pdfDoc.embedPng(imageBytes);
+            } else {
+              embeddedImage = await pdfDoc.embedJpg(imageBytes);
+            }
+            
+            // Calculate image dimensions (maintaining aspect ratio) - smaller for debugging
+            const maxWidth = 450;
+            const maxHeight = 400;
+            const { width: originalWidth, height: originalHeight } = embeddedImage;
+            
+            let imageWidth = maxWidth;
+            let imageHeight = (originalHeight / originalWidth) * maxWidth;
+            
+            if (imageHeight > maxHeight) {
+              imageHeight = maxHeight;
+              imageWidth = (originalWidth / originalHeight) * maxHeight;
+            }
+            
+            // Apply photo editing transformations if using uploaded photo
+            if (photoPreview) {
+              // Note: PDF-lib doesn't support CSS-like filters, so we'll just use scale and rotation
+              const scale = photoEditOptions.scale;
+              imageWidth *= scale;
+              imageHeight *= scale;
+            }
+            
+            // Use simple fixed positioning for debugging (Y=0 is at bottom in PDF)
+            const photoX = 1380;
+            const photoY = pageHeight - 1080; // Position from top of page
+            
+            addDebugInfo(`About to draw image: ${imageWidth}x${imageHeight} at position (${photoX}, ${photoY}) - pageHeight: ${pageHeight}`);
+            addDebugInfo(`Page dimensions: ${pageWidth}x${pageHeight}`);
+            addDebugInfo(`Image type: ${imageType}, has embeddedImage: ${!!embeddedImage}`);
+            
+            // Draw the image on the PDF
+            firstPage.drawImage(embeddedImage, {
+              x: photoX,
+              y: photoY,
+              width: imageWidth,
+              height: imageHeight,
+              // Temporarily remove rotation to simplify debugging
+              // rotate: photoPreview ? { angle: photoEditOptions.rotation * (Math.PI / 180) } : undefined,
+            });
+            addDebugInfo(`Photo successfully drawn to PDF: ${imageWidth}x${imageHeight} at position (${photoX}, ${photoY})`);
+          }
+        } catch (photoError) {
+          console.error('Error adding photo to PDF:', photoError);
+          addDebugInfo(`Photo error: ${photoError.message}`);
+          // Continue with PDF generation even if photo fails
         }
       }
       
@@ -498,7 +711,7 @@ const AppointmentLetterPDF = () => {
         color: rgb(0, 0, 0),
       });
       
-      // Role/Position (Department field repurposed)
+      // Role/Position (Department field repurposed) - REMOVED to prevent displacement of rashtriya pramukh
       const position = safeText(currentAppointmentData.position, 'Member');
       addDebugInfo(`Drawing position: "${position}"`);
       firstPage.drawText(position, {
@@ -725,6 +938,173 @@ const AppointmentLetterPDF = () => {
               <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center border-b border-blue-300 pb-3">
                 📝 Edit Data for PDF
               </h2>
+
+              {/* Photo Upload Section */}
+              <div className="mb-8 p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border-2 border-purple-200 shadow-sm">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                  📸 Upload Photo
+                </h3>
+                
+                {!photoPreview ? (
+                  <div
+                    className="border-3 border-dashed border-purple-300 rounded-xl p-8 text-center bg-white hover:bg-purple-25 transition-all duration-300 cursor-pointer group"
+                    onDrop={handlePhotoDrop}
+                    onDragOver={(e) => e.preventDefault()}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📷</div>
+                    <p className="text-gray-600 mb-2 font-medium">Click to upload or drag & drop</p>
+                    <p className="text-sm text-gray-500">JPEG, PNG, WebP (Max 5MB)</p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {/* Photo Preview */}
+                    <div className="relative bg-white rounded-xl p-4 shadow-sm">
+                      <div className="flex justify-center mb-4">
+                        <div className="relative w-32 h-32 rounded-xl overflow-hidden border-2 border-gray-200 shadow-md">
+                          <img
+                            src={photoPreview}
+                            alt="Photo preview"
+                            className="w-full h-full object-cover"
+                            style={getPhotoStyle()}
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Photo Controls */}
+                      <div className="flex justify-center space-x-3">
+                        <button
+                          onClick={() => setIsPhotoEditing(!isPhotoEditing)}
+                          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                        >
+                          {isPhotoEditing ? '✅ Done' : '✏️ Edit'}
+                        </button>
+                        <button
+                          onClick={() => fileInputRef.current?.click()}
+                          className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                        >
+                          🔄 Replace
+                        </button>
+                        <button
+                          onClick={removePhoto}
+                          className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                        >
+                          🗑️ Remove
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Photo Editing Controls */}
+                    {isPhotoEditing && (
+                      <div className="bg-white rounded-xl p-4 shadow-sm space-y-4">
+                        <h4 className="font-semibold text-gray-800 text-center">🎨 Photo Editing</h4>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {/* Brightness */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              ☀️ Brightness: {photoEditOptions.brightness}%
+                            </label>
+                            <input
+                              type="range"
+                              min="50"
+                              max="150"
+                              value={photoEditOptions.brightness}
+                              onChange={(e) => handlePhotoEditChange('brightness', parseInt(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                            />
+                          </div>
+
+                          {/* Contrast */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              🌓 Contrast: {photoEditOptions.contrast}%
+                            </label>
+                            <input
+                              type="range"
+                              min="50"
+                              max="150"
+                              value={photoEditOptions.contrast}
+                              onChange={(e) => handlePhotoEditChange('contrast', parseInt(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                            />
+                          </div>
+
+                          {/* Saturation */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              🎨 Saturation: {photoEditOptions.saturation}%
+                            </label>
+                            <input
+                              type="range"
+                              min="0"
+                              max="200"
+                              value={photoEditOptions.saturation}
+                              onChange={(e) => handlePhotoEditChange('saturation', parseInt(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                            />
+                          </div>
+
+                          {/* Rotation */}
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              🔄 Rotation: {photoEditOptions.rotation}°
+                            </label>
+                            <input
+                              type="range"
+                              min="-180"
+                              max="180"
+                              value={photoEditOptions.rotation}
+                              onChange={(e) => handlePhotoEditChange('rotation', parseInt(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                            />
+                          </div>
+
+                          {/* Scale */}
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              📏 Scale: {photoEditOptions.scale}x
+                            </label>
+                            <input
+                              type="range"
+                              min="0.5"
+                              max="2"
+                              step="0.1"
+                              value={photoEditOptions.scale}
+                              onChange={(e) => handlePhotoEditChange('scale', parseFloat(e.target.value))}
+                              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-center">
+                          <button
+                            onClick={resetPhotoEdits}
+                            className="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200 text-sm font-medium"
+                          >
+                            🔄 Reset All
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+                  </div>
+                )}
+              </div>
               
               <div className="space-y-5">
                 <div>

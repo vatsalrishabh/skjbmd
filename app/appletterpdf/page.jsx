@@ -409,7 +409,7 @@ const AppointmentLetterPDF = () => {
             
             // Use simple fixed positioning for debugging (Y=0 is at bottom in PDF)
             const photoX = 1380;
-            const photoY = pageHeight - 1080; // Position from top of paged
+            const photoY = pageHeight - 1080; // Position from top of ...
             
             addDebugInfo(`About to draw image: ${imageWidth}x${imageHeight} at position (${photoX}, ${photoY}) - pageHeight: ${pageHeight}`);
             addDebugInfo(`Page dimensions: ${pageWidth}x${pageHeight}`);
